@@ -1,0 +1,1 @@
+export const baseURL = 'http://45.249.11.5:28881/geoserver/web_app/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=web_app'

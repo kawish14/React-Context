@@ -1,0 +1,15 @@
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    width: 17%;
+}
+.input.form-control.rounded{
+    width: 0%;
+    background: #242424;
+    border: black;
+    color: #d3d3d3;
+    font-size: 13px;
+}

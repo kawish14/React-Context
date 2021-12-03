@@ -1,0 +1,1 @@
+export const south = 'http://45.249.11.5:28881/geoserver/South_PostGIS/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=South_PostGIS'
