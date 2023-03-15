@@ -1,0 +1,80 @@
+.graphicTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+.graphicTable td, .graphicTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.graphicTable tr:hover {
+  background-color: rgb(39, 39, 39);
+  cursor: pointer;
+}
+
+.thead {
+padding: -18px;
+text-align: center;
+background-color: rgb(125, 87, 1);
+color: white;
+font-size: 12px;
+font-family: sans-serif;
+position: sticky;
+  top: 0;  
+}
+
+.tbody{
+  background-color: #343a40;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.southCPE-tab,.northCPE-tab,.centerCPE-tab {
+border: 1px solid #fff;
+padding: 5px;
+text-align: center;
+background-color: #252525;
+}
+#centerCPE, #northCPE, #southCPE {
+  overflow-y: auto;
+  height: 40vh;
+}
+
+i.fas.fa-file-download {
+font-size: 22px;
+color: #ffebcd;
+}
+
+.date-widget{
+  color: #1f91f3;
+  cursor: pointer;
+  font-size: 15px;
+  border-color: rgb(88, 88, 88);
+  border: 1px solid #444a50;
+  border-radius: 5px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+  box-shadow: 2px 2px rgb(48, 48, 48);
+}
+.date-form{
+  background-color: #252525;
+  color: white;
+}
+input.dateClass.form-control {
+  background-color: #151515;
+  color: white
+}
+.model-date-header.modal-header, .model-date-body.modal-body {
+  background-color: #252525;
+  color: white;
+}
+button.close {
+  color: white;
+}

@@ -1,0 +1,71 @@
+.framework {
+    /* border: 1px solid black; */
+    border-radius: 3px;
+    padding: 2px;
+    margin: 5px;
+    /* text-align: center; */
+    /* font-size: 17px; */
+    font-family: 'Avenir Next';
+}
+.graphicTable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    
+  }
+  
+  .graphicTable td, .graphicTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .graphicTable tr:hover {
+    background-color: rgb(39, 39, 39);
+    cursor: pointer;
+  }
+
+.thead {
+    
+    text-align: center;
+    background-color: rgb(125, 87, 1);
+    color: white;
+    font-size: 12px;
+    font-family: sans-serif;
+    position: sticky;
+    top: 0;  
+}
+    
+.tbody{
+    background-color: #343a40;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+#centerCPE, #northCPE, #southCPE {
+    border: 1px solid #fff;
+    overflow-y: auto;
+    width: 100%;
+    background-color: #343a40;
+   
+}
+.ModalHeader{
+    color: whitesmoke;
+    background-color: #343a40;
+    width: 110%;
+}
+.ModalBody{
+    background-color: #343a40;
+    width: 110%;
+    height: 65vh;
+}
+div#southCPE {
+    height: 60vh;
+}
+div#northCPE {
+    height: 60vh;
+}
+div#centerCPE {
+    height: 60vh;
+}

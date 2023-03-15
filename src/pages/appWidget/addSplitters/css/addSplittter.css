@@ -1,0 +1,86 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    background-color: #2a2e32;
+    padding: 10px;
+    color: #2e8fe5;
+    position: sticky;
+    cursor: pointer;
+    overflow-y: auto;
+    height: 64vh;
+    text-align: "center";
+    width: auto;
+}
+.inital{
+
+    text-align: center;
+}
+.inital h6{
+    width: 12em;
+    font-size: large;
+    font-weight: 1000;
+    text-shadow: 2px 1px 1px #0f0f0f;
+    color: yellowgreen;
+}
+.initial-para {
+    margin-top: 40px;
+    font-size: 1em;
+    color: #3397ee;
+}
+
+.initial-btn{
+    font-size: smaller;
+    background-color: #0d83fa;
+    color:antiquewhite;
+    border: 1px solid #0d83fa;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+}
+
+.splitterForm {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: #2a2e32;
+    padding: 10px;
+    color: #2e8fe5;
+    position: sticky;
+    cursor: pointer;
+    overflow-y: auto;
+    height: 64vh;
+    text-align: "center";
+}
+.heading{
+    font-size: medium;
+    font-weight: bold;
+    text-align: center;
+}
+.generate{
+    margin-top: 5px;
+    font-size: smaller;
+    background-color: #0d83fa;
+    color:antiquewhite;
+    border: 1px solid #0d83fa;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+}
+
+.splitterSubmit{
+    background-color: #0d83fa;
+    color:antiquewhite;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    border: 1px solid #0d83fa;
+}
+.splitterForm input::placeholder {
+    opacity: 0.9;
+    font-size: small;
+
+}

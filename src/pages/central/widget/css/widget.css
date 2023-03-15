@@ -1,0 +1,51 @@
+.graphicTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+.graphicTable td, .graphicTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.graphicTable tr:hover {
+  background-color: rgb(39, 39, 39);
+  cursor: pointer;
+}
+
+.thead {
+padding: -18px;
+text-align: center;
+background-color: rgb(125, 87, 1);
+color: white;
+font-size: 12px;
+font-family: sans-serif;
+position: sticky;
+  top: 0;  
+}
+
+.tbody{
+  background-color: #343a40;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.southCPE-tab,.northCPE-tab,.centerCPE-tab {
+border: 1px solid #fff;
+padding: 5px;
+text-align: center;
+background-color: #252525;
+}
+#centerCPE, #northCPE, #southCPE {
+  overflow-y: auto;
+  height: 40vh;
+}
+
+i.fas.fa-file-download {
+font-size: 22px;
+color: #ffebcd;
+}

@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>KMLLayer | Sample | ArcGIS API for JavaScript 4.24</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        background-color: 242424;
+      }
+    </style>
+
+    <link
+    rel="stylesheet"
+    href="https://js.arcgis.com/4.19/esri/themes/dark/main.css"
+    />
+    <script src="https://js.arcgis.com/4.19/"></script>
+
+    
+    <script type="module">
+      let xmls
+      import { kml } from "https://unpkg.com/@tmcw/togeojson?module";
+
+      fetch("http://localhost:2000/coverage.kml")
+        .then(function (response) {
+          return response.text();
+        })
+        .then(function (xml) {
+          xmls = xml
+          
+          console.log(kml(new DOMParser().parseFromString(xml, "text/xml")));
+        });
+
+        let kmlLayer
+        let fileInputField;
+        let view 
+
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/KMLLayer",
+        "esri/widgets/ScaleBar",
+        "esri/widgets/Expand",
+      ], (Map, MapView, KMLLayer, ScaleBar,Expand) => {
+
+        let fileInput = document.getElementById("file-input")
+
+         fileInput.addEventListener('change', (event) => {    
+
+          const url = URL.createObjectURL(fileInput.files[0]);
+          
+          kmlLayer = new KMLLayer({
+            url: "http://localhost:2000/coverage.kml"
+          });
+      
+          if(kmlLayer){
+            view.map.remove(kmlLayer)
+          }
+          console.log(kml(new DOMParser().parseFromString(xmls, "text/xml")));
+          view.map.add(kmlLayer);
+          
+
+        },false); 
+      
+        kmlLayer = new KMLLayer({
+            url: "http://localhost:2000/coverage.kml"
+          });
+          
+        
+        const map = new Map({
+          basemap: "satellite",
+         layers: [kmlLayer]
+        });
+        
+         view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [67.171837, 24.908468], 
+          scale: 577791,
+
+        });
+
+        
+        let layerListExpand = new Expand({
+          expandIconClass: "esri-icon-upload",
+          view: view,
+          content: document.getElementById('browseCSV'),
+          group: "bottom-right"
+        });
+
+        view.ui.add(layerListExpand, "top-right");
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv">
+      <div id="browseCSV" style="background-color: #242424;  padding: 8px;
+         border-radius: 5px;">
+     <span><strong>Add KML File</strong></span>
+      <input type="file" id="file-input" name="files[]" accept=".kml">
+
+      
+   </div> 
+   </div>
+  </body>
+</html>

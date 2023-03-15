@@ -1,0 +1,52 @@
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    width: 17%;
+}
+.input.form-control.rounded{
+    width: 0%;
+    background: #242424;
+    border: black;
+    color: #d3d3d3;
+    font-size: 13px;
+}
+svg.svg-inline--fa.fa-file-csv {
+    font-size: 1.2em;
+}
+.UploadFile{
+    background: #343a40;
+    color: rgb(38, 144, 243);
+    cursor:pointer;
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 0.90em;
+    
+}
+.UploadCSV{
+    font-family: inherit;
+    font-weight: 500;
+    padding: 0.3rem /* 0.75rem */;
+    line-height: 1.5;
+    display: inline-block;
+    white-space: nowrap;
+    color: rgb(38, 144, 243);
+    font-size: 0.84em;
+    cursor: pointer;
+}
+.CustomerStatus{
+    background: #343a40;
+    color: rgb(38, 144, 243);
+    cursor:pointer;
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 0.91em
+}
+.logout{
+    color: rgb(38, 144, 243);
+    font-size: 0.95em;
+    cursor:pointer;
+    font-weight: 500;
+}

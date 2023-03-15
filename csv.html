@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Upload CSV File</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        background-color: 242424;
+      }
+		   
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.19/esri/themes/dark/main.css"
+    />
+    <script src="https://js.arcgis.com/4.19/"></script>
+
+    <script>
+
+        let csvLayer
+        let fileInputField;
+        let view 
+
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+          "esri/Graphic",
+        "esri/layers/CSVLayer",
+        "esri/widgets/Expand",
+        "esri/geometry/Polyline",
+        "esri/geometry/SpatialReference",
+        "esri/geometry/Point",
+      ], (Map, MapView, Graphic,CSVLayer,Expand,Polyline,SpatialReference,Point) => {
+        
+        let fileInput = document.getElementById("file-input");
+        fileInput.addEventListener('change', () => {          
+          const url = URL.createObjectURL(fileInput.files[0]);
+          console.log(url)
+          csvLayer = new CSVLayer({
+            url: url,
+            refreshInterval:0.2,
+              renderer: {
+              type: "simple",
+               symbol: {
+                type: "simple-marker",
+                style: "circle",
+                color: "blue",
+                size: "8px",
+                outline: {
+                  color: [255, 255, 255, 1],
+                  width: 0.4,
+                },
+              }
+            }
+          });
+
+          if(csvLayer){
+            map.remove(csvLayer)
+          }
+          
+          map.add(csvLayer);
+
+
+        },false);        
+
+        const map = new Map({
+          basemap: "satellite",
+          //layers: [csvLayer]
+        });
+        
+         view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [67.171837, 24.908468], 
+          scale: 577791,
+
+        });
+
+        view.on("click", function (event) {
+             view.hitTest(event).then(function (response) {
+             	if (response.results.length) {
+             		response.results.map(e => {
+             			if(e.graphic.attributes) {
+
+                    let popupTemplate = {
+                    // title: "ODB/DC",
+                      content: [{
+                        type: "fields",
+                        fieldInfos: []
+                      }]
+                    }
+
+             				Object.keys(e.graphic.attributes).map(e =>{
+                      popupTemplate.content[0].fieldInfos.push({
+                        "fieldName": e
+                      })
+             				})
+
+             				csvLayer.popupTemplate = popupTemplate
+             			}
+             		})
+             	}
+
+            })
+        })
+
+        let layerListExpand = new Expand({
+          expandIconClass: "esri-icon-upload",
+          view: view,
+          content: document.getElementById('browseCSV'),
+          group: "bottom-right"
+        });
+
+        view.ui.add(layerListExpand, "top-right");
+
+
+      });
+
+
+    </script>
+  </head>
+
+  <body>
+      
+    <div id="viewDiv">
+       <div id="browseCSV" style="background-color: #242424;  padding: 8px;
+          border-radius: 5px;">
+      <span><strong>Add CSV File</strong></span>
+       <input type="file" id="file-input" name="files[]" accept="text/csv">
+ 
+       
+    </div> 
+    </div>
+  </body>
+</html>

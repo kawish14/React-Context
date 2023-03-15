@@ -1,0 +1,117 @@
+.graphicTable {
+  font-family: Arial, Helvetica, sans-serif;
+  /* border-collapse: collapse; */
+  width: 100%;
+ 
+
+}
+
+.graphicTable td, .graphicTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.graphicTable tr:hover {
+  background-color: rgb(39, 39, 39);
+  cursor: pointer;
+}
+
+.thead {
+padding: -18px;
+text-align: center;
+background-color: rgb(125, 87, 1);
+color: white;
+font-size: 12px;
+font-family: sans-serif;
+position: sticky;
+  top: 0;  
+}
+
+.tbody{
+  background-color: #343a40;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.southCPE-tab,.northCPE-tab,.centerCPE-tab {
+border: 1px solid #fff;
+padding: 5px;
+text-align: center;
+background-color: #252525;
+}
+#centerCPE, #northCPE, #southCPE {
+  overflow-y: auto;
+  height: 40vh;
+}
+
+i.fas.fa-file-download {
+font-size: 22px;
+color: #ffebcd;
+}
+canvas.chartjs-render-monitor {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #282828;
+  margin-top: -6%
+}
+#example{
+  table-layout: fixed;
+  text-align:justify;
+  background-color: #242424;
+  color: white;
+  font-size:13px;
+  cursor:pointer;
+}
+.modal-content, .modal-body {
+  color: rgb(31, 145, 243);
+  background-color: #2c2b2b;
+}
+.modal-header{
+  text-align: center;
+  color: rgb(31, 145, 243);
+  background-color: #2c2b2b;
+}
+a.canvasjs-chart-credit {
+  display: none;
+}
+.nav-tabs{
+  border-top: 1px solid #828589;
+  border-bottom: 1px solid #828589;
+ 
+} 
+.mainParcelDiv{
+  padding: 8px;
+  color: rgb(31, 145, 243);
+  background-color: #2c2b2b;
+  font-weight:bold;
+  border-radius: 5px;
+}
+.BlockDiv, .SubBlockDiv {
+  display: flex;
+  flex: 1 1;
+  padding: 0;
+  flex-direction: column;
+}
+
+ .parcelSelection{
+  padding: 2px;
+  border-radius: 3px;
+  font-weight: 700;
+  color: #1f91f3;
+  background-color: #25282b;
+}
+
+.labelParcel{
+  font-weight: 700;
+  font-size: medium
+}
+.BlockDiv button, .SubBlockDiv button{
+    color: rgb(31, 145, 243);
+    background-color: #2c2b2b;
+}
+.Loading{
+  color: red;
+}
