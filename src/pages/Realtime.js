@@ -546,13 +546,11 @@ class Realtime extends React.Component {
         lastDowntime_complete,
         lastUptime_complete
       );
-
-      await this.SouthRecent(complete_date);
     }
 
-    if (data.alarmstate == 0 || data.alarmstate == 1 || data.alarmstate == 4) {
+    else if (data.alarmstate == 0 || data.alarmstate == 1 || data.alarmstate == 4) {
       let south = southCPELayer.createQuery();
-      south.where = `alarmstate in (2,4) AND status = 'Active'`;
+      south.where = `alarmstate in (2) AND status = 'Active'`;
 
       await southCPELayer.queryFeatures(south).then(async (res) => {
         await res.features.forEach(async (e) => {
@@ -567,7 +565,6 @@ class Realtime extends React.Component {
             CPEStatus.then((res) =>{
               this.props.southCPEstatus(res);
             })
-            await this.SouthRecent(complete_date);
           }
         });
       });
@@ -590,8 +587,6 @@ class Realtime extends React.Component {
         lastDowntime_complete,
         lastUptime_complete
       );
-
-      await this.NorthRecent(complete_date);
     }
 
     if (data.alarmstate == 0 || data.alarmstate == 1 || data.alarmstate == 4) {
@@ -611,7 +606,6 @@ class Realtime extends React.Component {
             CPEStatus.then((res) =>{
               this.props.northCPEstatus(res);
             })
-            await this.NorthRecent(complete_date);
           }
         });
       });
@@ -634,8 +628,6 @@ class Realtime extends React.Component {
         lastDowntime_complete,
         lastUptime_complete
       );
-
-      await this.CentralRecent(complete_date);
     }
 
     if (data.alarmstate == 0 || data.alarmstate == 1 || data.alarmstate == 4) {
@@ -655,7 +647,6 @@ class Realtime extends React.Component {
             CPEStatus.then((res) =>{
               this.props.centralCPEstatus(res);
             })
-            await this.CentralRecent(complete_date);
           }
         });
       });
@@ -870,6 +861,7 @@ class Realtime extends React.Component {
 
   componentWillUnmount() {
     socket.disconnect();
+    socket.off("endpoint")
    // clearInterval(this.interval);
   }
 
