@@ -24,6 +24,7 @@ export default class SearchWidget extends React.Component {
       ],
       { css: false }
     ).then(([Expand, LayerList, GeoJSONLayer, Search,Locator]) => {
+
       let source = [
         // 0
         {
@@ -177,6 +178,7 @@ export default class SearchWidget extends React.Component {
         view: view,
         group: "bottom-right",
         expanded: false,
+        expandTooltip:"Search"
       });
 
       view.ui.add(searchWidget, "top-right");
@@ -184,7 +186,8 @@ export default class SearchWidget extends React.Component {
       if(loginRole.role === "SouthDEVuser") searchWidget.content.sources = [source[0],source[1]];
       if(loginRole.role === "NorthDEVuser" ) searchWidget.content.sources = [source[4],source[5]];
       if(loginRole.role === "CentralDEVuser") searchWidget.content.sources = [source[2],source[3]];
-      if(loginRole.role === "Admin" ) searchWidget.content.sources = source;
+      if(loginRole.role === "Admin") searchWidget.content.sources = source;
+      if(loginRole.role === "CSD" ) searchWidget.content.sources = [source[0],source[2],source[4]]
       
     });
   }

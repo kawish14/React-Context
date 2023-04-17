@@ -29,6 +29,7 @@ export default function Legend(props) {
   let  centralDC = view.centralDC
   let  centralFAT = view.centralFAT
   let  centralJoint = view.centralJoint
+  let southBackhaul = view.southBackhaul
 
   useEffect(() => {
     let view = props.view;
@@ -46,6 +47,10 @@ export default function Legend(props) {
               layerInfos: [
                 {
                   layer: southPOP,
+                },
+                {
+                  layer:southBackhaul,
+                  title:'Backhaul'
                 },
                 {
                   layer: southFeeder,
@@ -72,6 +77,7 @@ export default function Legend(props) {
             view: view,
             group: "bottom-right",
             expanded: false,
+            expandTooltip:"Legend"
           });
         }
 
@@ -108,6 +114,7 @@ export default function Legend(props) {
             view: view,
             group: "bottom-right",
             expanded: false,
+            expandTooltip:"Legend"
           });
         }
 
@@ -144,6 +151,7 @@ export default function Legend(props) {
             view: view,
             group: "bottom-right",
             expanded: false,
+            expandTooltip:"Legend"
           });
         }
 
@@ -154,6 +162,10 @@ export default function Legend(props) {
               layerInfos: [
                 {
                   layer: northPOP,
+                },
+                {
+                  layer:southBackhaul,
+                  title:'Backhaul'
                 },
                 {
                   layer: northFeeder,
@@ -180,10 +192,10 @@ export default function Legend(props) {
             view: view,
             group: "bottom-right",
             expanded: false,
+            expandTooltip:"Legend"
           });
         }
         
-
       }
 
       view.on(["pointer-down", "pointer-move"], function (evt) {
@@ -191,8 +203,6 @@ export default function Legend(props) {
       });
 
     });
-
-  
 
   }, []);
 

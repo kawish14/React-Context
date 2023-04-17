@@ -4,7 +4,7 @@ import Sidebar from '../Sidebar'
 import MapContext from "../../context/mapContext";
 import { loadModules, setDefaultOptions } from 'esri-loader';
 
-import Realtime from "../../pages/Realtime";
+import Realtime from "../../pages/real-time/Realtime";
 import {WaveLoadings} from '../loading/LoadingComponent'
 
 import HomeWidget from '../../pages/appWidget/Home'

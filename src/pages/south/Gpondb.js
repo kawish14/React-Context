@@ -126,8 +126,8 @@ function Gpondb(props) {
 
 
   return (
-    <>
-      {props.summaryTableFun ? null : (
+    <div>
+      {props.summary ? null : (
         <>
           <table
             id="example"
@@ -149,9 +149,9 @@ function Gpondb(props) {
                   }}
                 >
                   Tickets
-                <span onClick={ticketModal}>
+                {/* <span onClick={ticketModal}>
                     <i className="fa fa-info-circle fa-lg"></i>
-                  </span>
+                  </span> */} 
                 </th>
               </tr>
             </thead>
@@ -185,7 +185,7 @@ function Gpondb(props) {
           </Modal>
         </>
       )}
-    </>
+    </div>
   );
 }
 

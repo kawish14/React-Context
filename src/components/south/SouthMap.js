@@ -24,7 +24,7 @@ import Gpondb from "../../pages/south/Gpondb";
 import ZonesLosiTicket from '../../pages/appWidget/zonal_tickets/ZonesLosiTicket'
 
 import Tracking from '../../pages/Tracking'
-import Realtime from "../../pages/Realtime";
+import Realtime from "../../pages/real-time/Realtime";
 import OfficeLocations from '../../pages/OfficeLocations'
 
 import {WaveLoadings} from '../loading/LoadingComponent'
@@ -37,7 +37,7 @@ import HomeWidget from '../../pages/appWidget/Home'
 import BaseMap from '../../pages/appWidget/BaseMap'
 import CoordinateWidget from '../../pages/appWidget/CoordinateWidget'
 import Legend from '../../pages/appWidget/Legend'
-import SelectGraphic from '../../pages/appWidget/selectionTool/SelectGraphic'
+import SelectionTool from "../../pages/appWidget/selectionTool/SelectionTool";
 import SearchWidget from '../../pages/appWidget/searchWidget/SearchWidget'
 import Pagination from '../../pages/south/widget/Pagination'
 
@@ -50,6 +50,7 @@ import KML from '../../pages/appWidget/kmlFileUploader/KML'
 
 import {version} from '../../url'
 import AddSplitters from "../../pages/appWidget/addSplitters/AddSplitters";
+
 
 setDefaultOptions({ version: version })
 
@@ -71,7 +72,7 @@ export default function SouthMap() {
     const changeTableHeight = (e) => {SetsummaryTableHeight(e)}
 
     const [summary, summaryTable] = useState(false);
-    const summaryTableFun = (e) => {summaryTable(e)} 
+    const summaryTableFun = (e) => {  summaryTable(e)} 
 
     const [search, updateSearch] = useState(null)
     const searchUpdateFun = (e) => {updateSearch(e)}
@@ -101,8 +102,12 @@ export default function SouthMap() {
       let view = new MapView({
         map: map,
         center: [67.171837, 24.908468], 
-        scale: 577791,
-        minScale:577791,
+        constraints: {
+          maxScale: 0,
+          minScale: 300000
+        },
+        scale: 288895,
+        minScale:288895,
         extent: 'bounds',
         container: mapRef.current,
         popup: {
@@ -270,7 +275,7 @@ export default function SouthMap() {
                 <GulshanHH view = {view} />
                 <GulshanTrench view={view} /> 
 
-                <ZonesLosiTicket view={view} /> 
+                {/* <ZonesLosiTicket view={view} />  */}
            
 
                 {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}
@@ -279,22 +284,24 @@ export default function SouthMap() {
               </>
             )}
         </div>
-        
-        {view && (
+        {/* 
+         {view && (
           <SouthDCDown view = {view} />
           
-        )} 
+        )}   */}
          
       </div>
 
       <div className="SumaryTableDiv" style={{height:summaryTableHeight}} >
         {view && (
           <>
-            <Gpondb view={view} southStatus = {southStatus} summaryTableFun={summary} ticket={ticket} />
-            <SelectGraphic view={view} changeTableHeight={changeTableHeight} 
+            <Gpondb view={view} southStatus = {southStatus} summary={summary} ticket={ticket} />
+ 
+            <SelectionTool view={view} changeTableHeight={changeTableHeight} 
               summaryTableFun={summaryTableFun}
-              layerViews = {[southCPELayerView,southDCLayerView]} // southDCLayerView, InactiveSouthCPELayerView
-            />
+              layerViews = {[southCPELayerView,southDCLayerView]} />
+    
+
           {/* <AddSplitters view={view} /> */}
           </>
         )}

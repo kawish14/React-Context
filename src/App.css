@@ -108,3 +108,7 @@ h2.esri-widget__heading {
     flex-flow: column;
     color: rgb(31, 145, 243);
 }
+.esri-feature__content-node {
+    background-color: #242424;
+   
+}

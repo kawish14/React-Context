@@ -48,15 +48,14 @@ import CentralJoint from "../../pages/central/CentralJoint";
 import SouthDCDown from '../../pages/south/SouthDCDown'
 import NorthDCDown from '../../pages/north/NorthDCDown'
 
-
 import SearchWidget from '../../pages/appWidget/searchWidget/SearchWidget'
 import AppWidgets from "./widget/AppWidgets";
 import ViewMaps from "../../pages/appWidget/ViewMaps";
 import Gpondb from "./Gpondb";
-import SelectGraphic from '../../pages/appWidget/selectionTool/SelectGraphic'
+import SelectionTool from '../../pages/appWidget/selectionTool/SelectionTool'
 
 import Tracking from "../../pages/Tracking";
-import Realtime from "../../pages/Realtime";
+import Realtime from "../../pages/real-time/Realtime";
 import OfficeLocations from "../../pages/OfficeLocations";
 import ZonesLosiTicket from '../../pages/appWidget/zonal_tickets/ZonesLosiTicket'
 
@@ -80,21 +79,6 @@ export default function Admin() {
   const mapRef = useRef();
   const loading = useRef();
 
-  const [south, setsouth] = useState(false);
-  const southFun = (e) => {
-    setsouth(e);
-  };
-
-  const [north, setnorth] = useState(false);
-  const northFun = (e) => {
-    setnorth(e);
-  };
-
-  const [central, setcentral] = useState(false);
-  const centralFun = (e) => {
-    setcentral(e);
-  };
-
   const [mapHeight, mapHeightUpdate] = useState("100%");
   const changeMapHeight = (e) => {
     mapHeightUpdate(e);
@@ -116,6 +100,9 @@ export default function Admin() {
   const centralCPEstatus = (e) => {
     updateCentralStatus(e);
   };
+
+  const[summaryTableHeight, SetsummaryTableHeight] = useState(null)
+  const changeTableHeight = (e) => {SetsummaryTableHeight(e)}
 
   const [summary, summaryTable] = useState(false);
   const summaryTableFun = (e) => {
@@ -462,7 +449,7 @@ export default function Admin() {
 
               <OfficeLocations view={view} />
 
-       {/*        <ZonesLosiTicket view={view} /> */}
+              {/* <ZonesLosiTicket view={view} /> */}
 
               
               {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}
@@ -493,9 +480,9 @@ export default function Admin() {
               NorthTicket={NorthTicket}
               CentralTicket={CentralTicket}
             />
-            <SelectGraphic
+            <SelectionTool
               view={view}
-              changeMapHeight={changeMapHeight}
+              changeTableHeight={changeTableHeight} 
               summaryTableFun={summaryTableFun}
               layerViews = {[
                 southLayerViewCPE,southInactiveCPE,

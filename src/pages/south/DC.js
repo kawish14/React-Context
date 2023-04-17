@@ -118,7 +118,7 @@ export default class DC extends React.Component {
             response.results.map((e) => {
               if (e.graphic.layer) {
                 if (e.graphic.layer.title === "South ODB/DC") {
-                  southDC.popupTemplate.actions = [relatedTable];
+                //  southDC.popupTemplate.actions = [relatedTable];
 
                   queryParams.where = `dc_id = ${e.graphic.attributes.id}`;
                 }

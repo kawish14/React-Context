@@ -1,4 +1,4 @@
-let version = '4.24'
+let version = '4.25'
 /* Public IP and Port */
 let api = "http://gis.tes.com.pk:28881" // API URL
 let authenticate =  `http://gis.tes.com.pk:28200/users/authenticate` // Login URL

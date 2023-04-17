@@ -17,11 +17,11 @@ import CentralLayerlist from "../../pages/central/widget/CentralLayerlist";
 import SearchWidget from '../../pages/appWidget/searchWidget/SearchWidget'
 import ViewMaps from "../../pages/appWidget/ViewMaps";
 import Gpondb from "../../pages/central/Gpondb";
-import SelectGraphic from '../../pages/appWidget/selectionTool/SelectGraphic'
+import SelectionTool from '../../pages/appWidget/selectionTool/SelectionTool'
 import ZonesLosiTicket from '../../pages/appWidget/zonal_tickets/CentralZoneTicket'
 
 import Tracking from '../../pages/Tracking'
-import Realtime from "../../pages/Realtime";
+import Realtime from "../../pages/real-time/Realtime";
 import HomeWidget from '../../pages/appWidget/Home'
 import BaseMap from '../../pages/appWidget/BaseMap'
 import CoordinateWidget from '../../pages/appWidget/CoordinateWidget'
@@ -83,7 +83,13 @@ export default function CentralMap() {
       let view = new MapView({
         map: map,
         center: [74.355626,31.545676],
-        scale: 577791,
+        constraints: {
+          maxScale: 0,
+          minScale: 300000
+        },
+        scale: 288895,
+        minScale:288895,
+        extent: 'bounds',
         container: mapRef.current,
         popup: {
           dockEnabled: true,
@@ -237,7 +243,7 @@ export default function CentralMap() {
                 centralCPEstatus={centralCPEstatus}
               /> 
 
-             {/*  <ZonesLosiTicket view ={view} />  */}
+              {/*  <ZonesLosiTicket view ={view} /> */}
 
               {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}
                 {file === "Upload KML" && <KML view={view} fileName={(e)=>updateFile(e)} />}
@@ -250,7 +256,7 @@ export default function CentralMap() {
         {view && (
           <>
             <Gpondb view={view} centralStatus = {centralStatus} summaryTableFun={summary}  ticket={ticket} />
-            <SelectGraphic view={view} changeTableHeight={changeTableHeight}  
+            <SelectionTool view={view} changeTableHeight={changeTableHeight}  
               summaryTableFun={summaryTableFun}
               layerViews = {[centralCPELayerView,InactiveCentralCPELayerView,centralDCView]}
 

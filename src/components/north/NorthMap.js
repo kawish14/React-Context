@@ -17,11 +17,11 @@ import NorthDCDown from '../../pages/north/NorthDCDown'
 import SearchWidget from '../../pages/appWidget/searchWidget/SearchWidget'
 import ViewMaps from "../../pages/appWidget/ViewMaps";
 import Gpondb from "../../pages/north/Gpondb";
-import SelectGraphic from '../../pages/appWidget/selectionTool/SelectGraphic'
+import SelectionTool from '../../pages/appWidget/selectionTool/SelectionTool'
 import ZonesLosiTicket from '../../pages/appWidget/zonal_tickets/ZonesLosiTicket'
 
 import Tracking from '../../pages/Tracking'
-import Realtime from "../../pages/Realtime";
+import Realtime from "../../pages/real-time/Realtime";
 import OfficeLocations from '../../pages/OfficeLocations'
 
 import HomeWidget from '../../pages/appWidget/Home'
@@ -86,7 +86,13 @@ export default function NorthMap() {
       let view = new MapView({
         map: map,
         center: [73.239156, 33.663228], 
-        scale: 577791,
+        constraints: {
+          maxScale: 0,
+          minScale: 300000
+        },
+        scale: 288895,
+        minScale:288895,
+        extent: 'bounds',
         container: mapRef.current,
         popup: {
           dockEnabled: true,
@@ -248,7 +254,7 @@ export default function NorthMap() {
                 view={view}
               />
 
-           {/*    <ZonesLosiTicket view={view} /> */}
+              {/*  <ZonesLosiTicket view={view} /> */}
 
               {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}
                 {file === "Upload KML" && <KML view={view} fileName={(e)=>updateFile(e)} />}
@@ -265,7 +271,7 @@ export default function NorthMap() {
         {view && (
           <>
             <Gpondb view={view} northStatus = {northStatus} summaryTableFun={summary}  ticket={ticket}  />
-              <SelectGraphic view={view} changeTableHeight={changeTableHeight} 
+              <SelectionTool view={view} changeTableHeight={changeTableHeight} 
                 summaryTableFun={summaryTableFun}
                 layerViews = {[northCPELayerView,InactiveNorthCPELayerView,northDCView]}
 

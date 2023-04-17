@@ -41,7 +41,9 @@ export default class Customer extends React.Component {
     };
     let date = ("0" + lastSevenDays.getDate()).slice(-2);
 
+
     let complete_date = year + "-" + month(lastSevenDays) + "-" + date;
+
 
     const name = "$feature.alarmstate";
     const cat = "$feature.category";

@@ -22,11 +22,11 @@ import ViewMaps from "../../pages/appWidget/ViewMaps";
 import Gpondb from "../admin/Gpondb";
 
 import Sidebar from "../Sidebar";
-
 import { WaveLoadings } from "../loading/LoadingComponent";
 
 import axios from 'axios'
 import { authenticationService } from '../../_services/authentication';
+import '../css/mainFile.css'
 
 import {version} from '../../url'
 setDefaultOptions({ version: version })
@@ -37,7 +37,7 @@ export default function CSD() {
   const mapRef = useRef();
   const loading = useRef();
 
-  const [mapHeight, mapHeightUpdate] = useState("75vh");
+  const [mapHeight, mapHeightUpdate] = useState("100%");
   const changeMapHeight = (e) => {
     mapHeightUpdate(e);
   };
@@ -218,20 +218,20 @@ export default function CSD() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "#2a2e32" }}>
+    <div className="RegionComponentDiv">
       <h1 ref={loading} style={styles.loading}>
         <WaveLoadings />
       </h1>
 
       {view && <Header view={view} />}
 
-      <div style={styles.dashboard}>
+      <div style={{width:'100%'}} className="Map_SideBarDiv">
         {view && <Sidebar view={view}></Sidebar>}
 
         <div
           ref={mapRef}
           style={{
-            width: "99vw",
+            width: "100%",
             height: mapHeight,
           }}
         >
@@ -259,7 +259,7 @@ export default function CSD() {
         </div>
       </div>
 
-      <div>
+      <div style={{height:'16%'}} className="SumaryTableDiv">
         {view && (
           <>
             <Gpondb

@@ -50,7 +50,7 @@ export default class SouthZoneTicket extends React.Component {
         _this.state.highlight.remove();
       }
 
-      view.ui.remove(_this.stats.current);
+    //  view.ui.remove(_this.stats.current);
 
       view.hitTest(evt).then(function (response) {
 
@@ -255,6 +255,7 @@ export default class SouthZoneTicket extends React.Component {
         _this.setState({
           highlight: _this.state.southLayerView.highlight(results.features),
           show: true,
+          display:"block"
         });
     
           view.popup.open({
@@ -306,7 +307,7 @@ export default class SouthZoneTicket extends React.Component {
     return (
       <>
         {this.state.show ? (
-          <div ref={this.table}>
+          <div ref={this.table} style={{display:this.state.display}}>
             <p>{this.state.zone}</p>
             <table className="summary">
               <thead>

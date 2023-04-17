@@ -170,7 +170,7 @@ export default class SelectGraphic extends React.Component {
     let arr = [];
 
     data.forEach((e, i) => {
-      console.log(e.attributes)
+      
       let obj = {
         attributes: {
           OBJECTID: e.attributes.objectid,

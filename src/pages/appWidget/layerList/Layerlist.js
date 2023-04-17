@@ -111,7 +111,7 @@ export default class Layerlist extends React.Component {
           visible: false,
         });
 
-        //view.map.add(this.state.parcelLayer)
+        view.map.add(this.state.parcelLayer)
         view.map.add(south_Layer);
         view.map.add(layers.graphicLayer);
         view.map.add(layers.graphicLayerLOSiDC);
@@ -123,8 +123,8 @@ export default class Layerlist extends React.Component {
             KHI_Layers.visible = true
             south_Layer.visible = true
         }else{
-          KHI_Layers.layers.splice(5,0,layers.southInactiveCPE)
-          //KHI_Layers.layers.push(layers.southInactiveCPE)
+           KHI_Layers.layers.splice(5,0,layers.southInactiveCPE)
+        
         }
 
       }
@@ -177,7 +177,7 @@ export default class Layerlist extends React.Component {
           north_Layer.visible = true
         }
         else{
-          ISB_Layers.layers.splice(5,0,layers.northInactiveCPE)
+           ISB_Layers.layers.splice(5,0,layers.northInactiveCPE)
         }
 
       }
@@ -420,10 +420,10 @@ export default class Layerlist extends React.Component {
           />
         </Modal>
 
-      {/*   {this.context.view.loginRole.role === "SouthDEVuser" ?
-        <Parcels view={this.props.view} parcelLayer={this.fromChild} />
+     {/*   {this.context.view.loginRole.role === "SouthDEVuser" ?
+         <Parcels view={this.props.view} parcelLayer={this.fromChild} /> 
         : null
-        } */}
+        }  */} 
         
       </>
     );
