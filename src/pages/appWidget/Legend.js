@@ -30,6 +30,7 @@ export default function Legend(props) {
   let  centralFAT = view.centralFAT
   let  centralJoint = view.centralJoint
   let southBackhaul = view.southBackhaul
+  let csvLayer = view.csvLayer
 
   useEffect(() => {
     let view = props.view;
@@ -72,6 +73,10 @@ export default function Legend(props) {
                   layer: southZone,
                   title: "Zones",
                 },
+                {
+                  layer:csvLayer,
+                  title:"CSV"
+                }
               ],
             }),
             view: view,
@@ -109,6 +114,10 @@ export default function Legend(props) {
                   layer: northZone,
                   title: "Zones",
                 },
+                {
+                  layer:csvLayer,
+                  title:"CSV"
+                }
               ],
             }),
             view: view,
@@ -146,6 +155,10 @@ export default function Legend(props) {
                   layer: centralZone,
                   title: "Zones",
                 },
+                {
+                  layer:csvLayer,
+                  title:"CSV"
+                }
               ],
             }),
             view: view,
@@ -187,6 +200,10 @@ export default function Legend(props) {
                   layer: northZone,
                   title: "Zones",
                 },
+                {
+                  layer:csvLayer,
+                  title:"CSV"
+                }
               ],
             }),
             view: view,

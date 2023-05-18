@@ -66,7 +66,8 @@ const MapState = (props) => {
     graphicLayerKML:{},
     parcels:{},
 
-    
+    csvLayer:{}
+
   };
 
   authenticationService.currentUser.subscribe((x) => {
@@ -2326,6 +2327,10 @@ const MapState = (props) => {
                  },
                ],
              },
+             {
+              type: "text",
+              text:""
+            }
            ],
          },
        });

@@ -1,7 +1,9 @@
 import React from "react";
 import mapContext from "../../context/mapContext";
 import "./widget/css/widget.css";
-import { loadModules, setDefaultOptions } from "esri-loader";
+import { loadModules } from "esri-loader";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import { Chart } from "react-google-charts";
 
 export default class NorthDC extends React.Component {
@@ -14,28 +16,23 @@ export default class NorthDC extends React.Component {
       LOP_DC: [],
       DC_DetailLOP: null,
       DC_DetailLOSi: null,
-      SeventyPercent: 70,
       width: "0%",
-      receivePercent: null,
 
       southLayerView: null,
       popupText: "",
-      locationGo: null,
-      manuallyPause: false,
-
-      playButtonClass: "btn",
-      playButtonState: "stop",
-      playButtonIconClass: "fa fa-pause",
 
       data: null,
       display: "none",
 
-      LOSiOBJECTID: {},
-      LOPOBJECTID: {},
+      highlight:null,
+      download:null,
+      dc_id:null
+
     };
 
     this.chart = React.createRef();
   }
+
 
   componentDidMount() {
     let _this = this;
@@ -66,8 +63,8 @@ export default class NorthDC extends React.Component {
           symbol: {
             type: "picture-marker",
             url: "images/dc1.png",
-            width: "24px",
-            height: "17px",
+            width: "20px",
+            height: "14px",
           },
         },
       ],
@@ -97,11 +94,20 @@ export default class NorthDC extends React.Component {
 
     let relatedTable = {
       title: "CPE",
-      id: "CPE-DCNorth",
+      id: "CPE-NorthDC",
       image: "images/database.png",
     };
 
+    let download = {
+      title: "Download",
+      id: "download-NorthCPE",
+      image: "images/download.png",
+    };
+
     const queryParams = northCPELayer.createQuery();
+    queryParams.outFields = ["objectid", "id","dc_id","splitter_id","fat_id", "name", "type", "address", "downtime","uptime","area_town",
+                              "sub_area","city","olt", "frame","slot","port","ontid","ontmodel","alarminfo","alarmstate",
+                            "ticketstatus","tickettype","ticketopentime","ticketresolvetime"]
 
     let highlightSelect;
 
@@ -110,6 +116,7 @@ export default class NorthDC extends React.Component {
         _this.setState({
           popupText: "",
           data: null,
+
         });
 
         northDC.popupTemplate.content[1].text = _this.state.popupText;
@@ -123,26 +130,50 @@ export default class NorthDC extends React.Component {
             response.results.map((e) => {
               if (e.graphic.layer) {
                 if (e.graphic.layer.title === "North ODB/DC") {
-                 // northDC.popupTemplate.actions = [relatedTable];
+                  if (_this.state.highlight) {
+  
+                    _this.state.highlight.remove();
+                    
+                  }
+                  northDC.popupTemplate.actions = [relatedTable];
 
                   queryParams.where = `dc_id = ${e.graphic.attributes.id}`;
-                  
+                  _this.setState({
+                    dc_id:e.graphic.attributes.id
+                  })
+
                 }
               }
+              return null
             });
           }
         });
       });
     });
 
-
-
     _this.props.view.popup.on("trigger-action", function (event) {
-      if (event.action.id === "CPE-DCNorth") {
+
+      if (event.action.id === "download-NorthCPE") {
+        const fileType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+
+        const ws = XLSX.utils.json_to_sheet(_this.state.download);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+
+        FileSaver.saveAs(data, `DC - ${_this.state.dc_id}` + fileExtension);
+      }
+
+      if (event.action.id === "CPE-NorthDC") {
+        let array = []
+
         _this.props.view
           .whenLayerView(northCPELayer)
           .then(function (layerView) {
             northCPELayer.queryFeatures(queryParams).then(function (result) {
+            
               if (result.features.length === 0) {
                 return null;
               } else {
@@ -153,6 +184,13 @@ export default class NorthDC extends React.Component {
                 let lopPopup = [];
 
                 result.features.map((e, i) => {
+
+                  array.push(e.attributes);
+
+                  _this.setState({
+                    download: array,
+                  });
+
                   if (e.attributes.alarmstate === 0) {
                     onlinePopup.push(e.attributes);
                   }
@@ -167,8 +205,10 @@ export default class NorthDC extends React.Component {
                   }
                   if (e.attributes.alarmstate === 4) {
                     lopPopup.push(e.attributes);
-                    console.log(e.attributes, result.features.length);
+                    console.log(e.attributes,result.features.length)
                   }
+
+                  return null
                 });
 
                 /************************ Chart Data ***************************/
@@ -188,6 +228,7 @@ export default class NorthDC extends React.Component {
                 });
 
                 /*********************** CUSTOM CONTENT OF CHART TO ADD IN POPUP *********************/
+
                 loadModules(["esri/popup/content/CustomContent"], {
                   css: false,
                 }).then(([CustomContent]) => {
@@ -198,7 +239,7 @@ export default class NorthDC extends React.Component {
                       return _this.chart.current;
                     },
                   });
-  
+
                   let popupTemplate = {
                     title: "ODB/DC",
                     content: [
@@ -248,7 +289,7 @@ export default class NorthDC extends React.Component {
                             label: "Area",
                           },
                           {
-                            fieldName: "sub_area",
+                            fieldName: "block_phase_sector",
                             visible: true,
                             label: "Sub Area",
                           },
@@ -263,7 +304,7 @@ export default class NorthDC extends React.Component {
                             label: "Capacity",
                           },
                           {
-                            fieldName: "splitter_type",
+                            fieldName: "Splitter_Type",
                             visible: true,
                             label: "Splitter",
                           },
@@ -284,25 +325,42 @@ export default class NorthDC extends React.Component {
   
                   northDC.popupTemplate = popupTemplate;
 
+                  northDC.popupTemplate.actions = [download];
+  
                 })
-              
-
+               
                 /*************** Apply CSS after passing data into state mentioned above *****************/
+
+                if (_this.state.highlight) {
+                  _this.state.highlight.remove();
+                }
 
                 _this.setState({
                   display: "block",
-                });
-
-                if (highlightSelect) {
-                  highlightSelect.remove();
-                }
-
-                highlightSelect = layerView.highlight(result.features);
+                  highlight : layerView.highlight(result.features)
+                })
+               
               }
+
             });
           });
       }
     });
+
+    loadModules(["esri/core/watchUtils"], {
+      css: false,
+    }).then(([watchUtils]) => {
+      watchUtils.whenTrue(_this.props.view.popup, "visible", function () {
+        watchUtils.whenFalseOnce(_this.props.view.popup, "visible", function () {
+          if (_this.state.highlight) {
+  
+            _this.state.highlight.remove();
+            
+          }
+        });
+      });
+    })
+
   }
 
   render() {
@@ -324,17 +382,21 @@ export default class NorthDC extends React.Component {
       },
     };
     return (
-      <div ref={this.chart} style={{ display: this.state.display }}>
-        {this.state.data !== null ? (
-          <Chart
-            chartType="PieChart"
-            data={this.state.data}
-            options={options}
-            width={"100%"}
-            height={"20vh"}
-          />
-        ) : null}
-      </div>
+
+        <div ref={this.chart} style={{ display: this.state.display }}>
+          {this.state.data !== null ? (
+            <Chart
+              chartType="PieChart"
+              data={this.state.data}
+              options={options}
+              width={"100%"}
+              height={"20vh"}
+            />
+          ) : null}
+        </div>
+      
     );
   }
 }
+
+

@@ -422,8 +422,8 @@ export default class Layerlist extends React.Component {
 
      {/*   {this.context.view.loginRole.role === "SouthDEVuser" ?
          <Parcels view={this.props.view} parcelLayer={this.fromChild} /> 
-        : null
-        }  */} 
+       : null
+        }   */}
         
       </>
     );

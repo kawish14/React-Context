@@ -63,7 +63,7 @@ export default class POP extends React.Component {
       image: "images/database.png",
     };
 
-   // southPOP.popupTemplate.actions = [relatedTable];
+    // southPOP.popupTemplate.actions = [relatedTable];
 
     const queryParams = southCPELayer.createQuery();
 

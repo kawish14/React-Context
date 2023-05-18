@@ -709,9 +709,9 @@ export default class SelectionTool extends React.Component {
                   {this.state.selectAttributes.map((data, i) => {
                     return (
                       <>
-                        {Object.keys(data).map((name) => {
+                        {Object.keys(data).map((name,id) => {
                           return (
-                            <li className="southCPE-tab" id={name}>
+                            <li className="southCPE-tab" id={id}>
                               <strong>
                                 <a
                                   data-toggle="tab"
@@ -765,7 +765,7 @@ export default class SelectionTool extends React.Component {
                         ).map((heading, index) => {
                           return (
                             <th
-                              key={i}
+                              key={index}
                               onContextMenu={(event) =>
                                 this.handleRightClick(event, heading)
                               }

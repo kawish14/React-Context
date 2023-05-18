@@ -52,7 +52,7 @@ export default function CSV(props) {
   let fileUpload = (e) => {
 
     const url = URL.createObjectURL(e.target.files[0]);
-
+   
     updateURL(url)
 
     if (csvLayer) {
@@ -99,11 +99,14 @@ export default function CSV(props) {
         },
       });
 
+
       if (csvLayer) {
         view.map.remove(csvLayer);
       }
 
       view.map.add(csvLayer);
+
+      context.view.csvLayer = csvLayer
 
       csvLayer.when(function(){
         props.fileName(null)

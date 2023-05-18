@@ -580,7 +580,7 @@ class Header extends Component {
           )}
           
           <Collapse isOpen={this.state.isNavOpen} navbar>
-            {/*  <Nav navbar>
+          {/*   <Nav navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle style={{color: 'rgb(38, 144, 243)'}} nav caret>
                   <span title="Upload File" className="UploadFile" >

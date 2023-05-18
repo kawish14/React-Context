@@ -149,9 +149,9 @@ function Gpondb(props) {
                   }}
                 >
                   Tickets
-                {/* <span onClick={ticketModal}>
+               {/*   <span onClick={ticketModal}>
                     <i className="fa fa-info-circle fa-lg"></i>
-                  </span> */} 
+                  </span>  */}
                 </th>
               </tr>
             </thead>

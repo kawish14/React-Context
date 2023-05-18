@@ -69,6 +69,10 @@ import axios from 'axios'
 import { authenticationService } from '../../_services/authentication';
 
 import {version} from '../../url'
+import Legend from "../../pages/appWidget/Legend";
+import BaseMap from "../../pages/appWidget/BaseMap";
+import HomeWidget from "../../pages/appWidget/Home";
+import CoordinateWidget from "../../pages/appWidget/CoordinateWidget";
 setDefaultOptions({ version: version })
 
 export default function Admin() {
@@ -148,6 +152,10 @@ export default function Admin() {
         center: [70.177627, 28.844898],
         scale: 18489298,
         container: mapRef.current,
+        /* navigation: {
+          mouseWheelZoomEnabled: false,
+          browserTouchPanEnabled: false
+        }, */
         popup: {
           dockEnabled: true,
           dockOptions: {
@@ -436,7 +444,12 @@ export default function Admin() {
               <CentralZone view={view} />
 
               <SearchWidget view={view} />
-              <AppWidgets view={view} />
+
+              <Legend view={view} />
+              <BaseMap view={view} />
+              <HomeWidget view={view} />
+              <CoordinateWidget view={view} />
+
               <ViewMaps view={view} />
 
               <Tracking view={view} searchUpdateFun={searchUpdateFun} />
@@ -447,7 +460,7 @@ export default function Admin() {
                 centralCPEstatus={centralCPEstatus}
               />
 
-              <OfficeLocations view={view} />
+             {/*  <OfficeLocations view={view} /> */}
 
               {/* <ZonesLosiTicket view={view} /> */}
 

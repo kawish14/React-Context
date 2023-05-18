@@ -2,7 +2,8 @@ import React from "react";
 import mapContext from "../../context/mapContext";
 import "./widget/css/widget.css";
 import { loadModules, setDefaultOptions } from "esri-loader";
-
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import { Chart } from "react-google-charts";
 
 export default class DC extends React.Component {
@@ -23,7 +24,9 @@ export default class DC extends React.Component {
       data: null,
       display: "none",
 
-      highlight:null
+      highlight:null,
+      download:null,
+      dc_id:null
 
     };
 
@@ -34,6 +37,7 @@ export default class DC extends React.Component {
   componentDidMount() {
     let _this = this;
 
+    
     let { southCPELayer, southDC } = this.context.view;
 
     const wf_status = "$feature.wf_status";
@@ -95,7 +99,16 @@ export default class DC extends React.Component {
       image: "images/database.png",
     };
 
+    let download = {
+      title: "Download",
+      id: "download-CPE",
+      image: "images/download.png",
+    };
+
     const queryParams = southCPELayer.createQuery();
+    queryParams.outFields = ["objectid", "id","dc_id","splitter_id","fat_id", "name", "type", "address", "downtime","uptime","area_town",
+                              "sub_area","city","olt", "frame","slot","port","ontid","ontmodel","alarminfo","alarmstate",
+                            "ticketstatus","tickettype","ticketopentime","ticketresolvetime"]
 
     let highlightSelect;
 
@@ -118,9 +131,18 @@ export default class DC extends React.Component {
             response.results.map((e) => {
               if (e.graphic.layer) {
                 if (e.graphic.layer.title === "South ODB/DC") {
-                //  southDC.popupTemplate.actions = [relatedTable];
+                  if (_this.state.highlight) {
+  
+                    _this.state.highlight.remove();
+                    
+                  }
+                  southDC.popupTemplate.actions = [relatedTable];
 
                   queryParams.where = `dc_id = ${e.graphic.attributes.id}`;
+                  _this.setState({
+                    dc_id:e.graphic.attributes.id
+                  })
+
                 }
               }
             });
@@ -130,7 +152,23 @@ export default class DC extends React.Component {
     });
 
     _this.props.view.popup.on("trigger-action", function (event) {
+
+      if (event.action.id === "download-CPE") {
+        const fileType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+
+        const ws = XLSX.utils.json_to_sheet(_this.state.download);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+
+        FileSaver.saveAs(data, `DC - ${_this.state.dc_id}` + fileExtension);
+      }
+
       if (event.action.id === "CPE-DC") {
+        let array = []
+
         _this.props.view
           .whenLayerView(southCPELayer)
           .then(function (layerView) {
@@ -146,6 +184,12 @@ export default class DC extends React.Component {
                 let lopPopup = [];
 
                 result.features.map((e, i) => {
+
+                  array.push(e.attributes);
+
+                  _this.setState({
+                    download: array,
+                  });
 
                   if (e.attributes.alarmstate === 0) {
                     onlinePopup.push(e.attributes);
@@ -278,8 +322,9 @@ export default class DC extends React.Component {
                   };
   
                   southDC.popupTemplate = popupTemplate;
-  
 
+                  southDC.popupTemplate.actions = [download];
+  
                 })
                
                 /*************** Apply CSS after passing data into state mentioned above *****************/
@@ -294,6 +339,7 @@ export default class DC extends React.Component {
                 })
                
               }
+
             });
           });
       }

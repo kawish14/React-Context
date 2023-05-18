@@ -175,6 +175,18 @@ const listItems = (event) => {
         ],
       ];
     }
+
+  /*   if (item.title === "CSV Layer") {
+      item.actionsSections = [
+        [
+          {
+            title: "Symbology",
+            className: "esri-icon-configure-popup",
+            id: "symbology",
+          },
+        ],
+      ];
+    } */
 }
 
 export {listItems}

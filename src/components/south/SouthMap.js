@@ -91,9 +91,9 @@ export default function SouthMap() {
 
   useEffect(() => {
    
-    loadModules(["esri/Map","esri/views/MapView","esri/views/SceneView", "esri/layers/GeoJSONLayer","esri/widgets/Locate",],
+    loadModules(["esri/Map","esri/views/MapView", "esri/layers/GeoJSONLayer","esri/Graphic","esri/widgets/Locate",],
      { css: false })
-    .then(([Map,MapView,SceneView,GeoJSONLayer,Locate]) => {
+    .then(([Map,MapView,GeoJSONLayer,Graphic,Locate]) => {
 
       let map = new Map({
         basemap: "satellite",
@@ -284,11 +284,11 @@ export default function SouthMap() {
               </>
             )}
         </div>
-        {/* 
-         {view && (
+        
+       {/*   {view && (
           <SouthDCDown view = {view} />
           
-        )}   */}
+        )}  */}
          
       </div>
 

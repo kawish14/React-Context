@@ -17,14 +17,13 @@ export default class SearchWidget extends React.Component {
     loadModules(
       [
         "esri/widgets/Expand",
-        "esri/widgets/LayerList",
-        "esri/layers/GeoJSONLayer",
         "esri/widgets/Search",
-        "esri/rest/locator"
+        "esri/layers/GroupLayer",
       ],
       { css: false }
-    ).then(([Expand, LayerList, GeoJSONLayer, Search,Locator]) => {
+    ).then(([Expand, Search,GroupLayer]) => {
 
+  
       let source = [
         // 0
         {
@@ -183,11 +182,44 @@ export default class SearchWidget extends React.Component {
 
       view.ui.add(searchWidget, "top-right");
 
-      if(loginRole.role === "SouthDEVuser") searchWidget.content.sources = [source[0],source[1]];
-      if(loginRole.role === "NorthDEVuser" ) searchWidget.content.sources = [source[4],source[5]];
-      if(loginRole.role === "CentralDEVuser") searchWidget.content.sources = [source[2],source[3]];
-      if(loginRole.role === "Admin") searchWidget.content.sources = source;
-      if(loginRole.role === "CSD" ) searchWidget.content.sources = [source[0],source[2],source[4]]
+    
+      if(loginRole.role === "SouthDEVuser") {
+        searchWidget.content.sources = [source[0],source[1]];
+
+        searchWidget.content.on('search-complete', (e) => {
+          southDC.popupTemplate.actions = [];
+        });
+      }
+
+      if(loginRole.role === "NorthDEVuser" ) {
+        searchWidget.content.sources = [source[4],source[5]];
+
+        searchWidget.content.on('search-complete', (e) => {
+          northDC.popupTemplate.actions = [];
+        });
+      }
+
+      if(loginRole.role === "CentralDEVuser") {
+        searchWidget.content.sources = [source[2],source[3]];
+
+        searchWidget.content.on('search-complete', (e) => {
+          centralDC.popupTemplate.actions = [];
+        });
+      }
+
+      if(loginRole.role === "Admin") {
+        searchWidget.content.sources = source;
+
+        searchWidget.content.on('search-complete', (e) => {
+          southDC.popupTemplate.actions = [];
+          northDC.popupTemplate.actions = [];
+          centralDC.popupTemplate.actions = [];
+        });
+      }
+
+      if(loginRole.role === "CSD" ) {
+        searchWidget.content.sources = [source[0],source[2],source[4]]
+      }
       
     });
   }
