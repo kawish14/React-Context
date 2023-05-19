@@ -8,11 +8,6 @@ import axios from 'axios'
 import {version} from '../url'
 setDefaultOptions({ version: version })
 
-//let url = "http://172.29.100.28:8081/";
-//let url = "http://45.249.11.5:28881/";
-
-//let url = "http://gis.tes.com.pk:28881/"
-
 const MapState = (props) => {
   const view = {
     loginRole: {},
@@ -610,7 +605,7 @@ const MapState = (props) => {
          labelsVisible: false,
          visible: false,
          minScale: 1155581,
-         outFields:["id","name","pop_id","placement","plot","area","block_phase_sector","city","capacity","Splitter_Type","splitter_count"],
+         outFields:["id","name","pop_id","placement","plot","area","block_phase_sector","city","capacity","splitter_count"],
          popupTemplate: {
            title: "ODB/DC",
            content: [
@@ -673,11 +668,6 @@ const MapState = (props) => {
                    fieldName: "capacity",
                    visible: true,
                    label: "Capacity",
-                 },
-                 {
-                   fieldName: "Splitter_Type",
-                   visible: true,
-                   label: "Splitter",
                  },
                  {
                    fieldName: "splitter_count",
@@ -1433,7 +1423,7 @@ const MapState = (props) => {
          labelsVisible: false,
          visible: false,
          minScale: 1155581,
-         outFields:["id","name","pop_id","placement","plot","area","sub_area","city","capacity","splitter_type","splitter_count"],
+         outFields:["id","name","pop_id","placement","plot","area","sub_area","city","capacity","splitter_count"],
          popupTemplate: {
            title: "ODB/DC",
            content: [
@@ -1496,11 +1486,6 @@ const MapState = (props) => {
                   fieldName: "capacity",
                   visible: true,
                   label: "Capacity",
-                },
-                {
-                  fieldName: "splitter_type",
-                  visible: true,
-                  label: "Splitter",
                 },
                 {
                   fieldName: "splitter_count",
@@ -2251,7 +2236,7 @@ const MapState = (props) => {
          minScale: 1155581,
          visible: false,
          labelsVisible: false,
-         outFields:["id","name","pop_id","placement","plot","area","sub_area","city","capacity","splitter_type","splitter_count"],
+         outFields:["id","name","pop_id","placement","plot","area","sub_area","city","capacity","splitter_count"],
          popupTemplate: {
            title: "ODB/DC",
            content: [
@@ -2314,11 +2299,6 @@ const MapState = (props) => {
                    fieldName: "capacity",
                    visible: true,
                    label: "Capacity",
-                 },
-                 {
-                   fieldName: "Splitter_Type",
-                   visible: true,
-                   label: "Splitter",
                  },
                  {
                    fieldName: "splitter_count",
@@ -2778,6 +2758,7 @@ const MapState = (props) => {
 
      });
    }
+
   return (
     <MapContext.Provider value={{view}}>{props.children}</MapContext.Provider>
   );

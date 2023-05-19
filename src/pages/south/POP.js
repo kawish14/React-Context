@@ -1,8 +1,9 @@
 import React from "react";
 import mapContext from "../../context/mapContext";
+import { loadModules, setDefaultOptions } from "esri-loader";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-
+import "./widget/css/widget.css";
 export default class POP extends React.Component {
   static contextType = mapContext;
   constructor(props) {
@@ -11,7 +12,13 @@ export default class POP extends React.Component {
       relatedCPE: [],
       popID: null,
       popName: null,
+      maxSlot: null,
+      used_ports: null,
+      free_ports: null,
+      show: false,
+      display:"none"
     };
+    this.table = React.createRef();
   }
 
   empty = (arr) => (arr.length = 0);
@@ -63,8 +70,6 @@ export default class POP extends React.Component {
       image: "images/database.png",
     };
 
-    // southPOP.popupTemplate.actions = [relatedTable];
-
     const queryParams = southCPELayer.createQuery();
 
     _this.props.view.when(function () {
@@ -86,9 +91,13 @@ export default class POP extends React.Component {
                   e.graphic.attributes.name === "AP" ||
                   e.graphic.attributes.name === "Gulshan POP"
                 ) {
+
+                  southPOP.popupTemplate.actions = [relatedTable];
+
                   _this.setState({
                     popID: e.graphic.attributes.id,
                     popName: e.graphic.attributes.name,
+                   display:"none"
                   });
 
                   queryParams.where = `pop_id = ${e.graphic.attributes.id}`;
@@ -112,7 +121,7 @@ export default class POP extends React.Component {
 
     _this.props.view.popup.on("trigger-action", function (event) {
       if (event.action.id === "related-tableCPE") {
-        const fileType =
+        /*   const fileType =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
 
@@ -121,16 +130,119 @@ export default class POP extends React.Component {
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
 
-        FileSaver.saveAs(data, ` ${_this.state.popName} - CPE` + fileExtension);
+        FileSaver.saveAs(data, ` ${_this.state.popName} - CPE` + fileExtension); */
+
+        let obj = {};
+
+        let total_fsp = new Set();
+        let maxSlot = -Infinity;
+
+        // Iterate over the array and add fsp values to the Set
+        for (let i = 0; i < _this.state.relatedCPE.length; i++) {
+          total_fsp.add(_this.state.relatedCPE[i].nce_fsp);
+          if (_this.state.relatedCPE[i].slot > maxSlot) {
+            maxSlot = _this.state.relatedCPE[i].slot;
+          }
+        }
+
+        // Get the total count of unique fsp values
+        let totalCount = total_fsp.size;
+
+        _this.setState({
+          cards: maxSlot,
+          used_ports: totalCount,
+          free_ports: maxSlot * 16 - totalCount,
+          display:"inline-table"
+        });
+
+        loadModules(["esri/popup/content/CustomContent"], {
+          css: false,
+        }).then(([CustomContent]) => {
+
+          const contentWidget = new CustomContent({
+            outFields: ["*"],
+            creator: function () {
+              return _this.table.current;
+            },
+          });
+
+          let popupTemplate = {
+      
+            title: "POP",
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "name",
+                    visible: true,
+                    label: "Name",
+                    format: {
+                      digitSeparator: false,
+                      places: 0,
+                    },
+                  },
+                  {
+                    fieldName: "id",
+                    visible: true,
+                    label: "ID",
+                  },
+                  {
+                    fieldName: "plot",
+                    visible: true,
+                    label: "Plot",
+                  },
+                  {
+                    fieldName: "street",
+                    visible: true,
+                    label: "Street",
+                  },
+                  {
+                    fieldName: "area",
+                    visible: true,
+                    label: "Area/Town",
+                  },
+                  {
+                    fieldName: "block_phase_sector",
+                    visible: true,
+                    label: "block/Phase",
+                  },
+                ],
+              },
+              contentWidget
+            ],
+          };
+
+          southPOP.popupTemplate = popupTemplate
+
+    
+        });
       }
     });
 
-    /*  _this.props.view.on("click",function(){
-            updatePopURL('alarmstate=2')
-
-        }) */
   }
+
   render() {
-    return null;
+    return (
+      <table className="summary" ref={this.table} style={{display:this.state.display}}>
+        <thead>
+          <tr>
+            <th className="head">Cards</th>
+            <th className="head">Used Ports</th>
+            <th className="head">Free Ports</th>
+            <th className="head">Customer Count</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td className="data">{this.state.cards === -Infinity ? 0 : this.state.cards }</td>
+            <td className="data">{this.state.used_ports}</td>
+            <td className="data">{this.state.free_ports === -Infinity ? 0 : this.state.free_ports}</td>
+            <td className="data">{this.state.relatedCPE.length}</td>
+          </tr>
+        </tbody>
+      </table>
+    );
   }
 }

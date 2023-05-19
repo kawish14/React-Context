@@ -304,11 +304,6 @@ export default class CentralDC extends React.Component {
                             label: "Capacity",
                           },
                           {
-                            fieldName: "Splitter_Type",
-                            visible: true,
-                            label: "Splitter",
-                          },
-                          {
                             fieldName: "splitter_count",
                             visible: true,
                             label: "Splitter Count",

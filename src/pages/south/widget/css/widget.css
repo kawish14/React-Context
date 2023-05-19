@@ -115,3 +115,48 @@ a.canvasjs-chart-credit {
 .Loading{
   color: red;
 }
+.summary{
+  /* font-family: arial, sans-serif; */
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.summary .data, .head {
+  border: 1px solid rgb(75 138 193);
+  text-align: center;
+  padding: 8px;
+  font-size: smaller;
+}
+.para{
+font-size: 0.953em;
+color:#b4b417
+}
+.note{
+font-size: 1.1em;
+color:#b4b417
+}
+.zoneTitle{
+font-size: 0.9em;
+}
+#coordsWidget {
+  font-size: small;
+  margin: -5px;
+  background-color: #242424;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  color: rgb(31, 145, 243);
+}
+.ZoneData-btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+/* Darker background on mouse-over */
+.ZoneData-btn:hover {
+  background-color: RoyalBlue;
+}
