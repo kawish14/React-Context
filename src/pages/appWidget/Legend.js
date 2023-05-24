@@ -174,11 +174,61 @@ export default function Legend(props) {
               view: view,
               layerInfos: [
                 {
-                  layer: northPOP,
+                  layer: southPOP,
                 },
                 {
                   layer:southBackhaul,
                   title:'Backhaul'
+                },
+                {
+                  layer: southFeeder,
+                  title: "Fiber Optical Cable",
+                },
+                {
+                  layer: southDC,
+                  title: "Distribution Cabinet (DC/ODB)",
+                },
+                {
+                  layer: southFAT,
+                  title: "FAT",
+                },
+                {
+                  layer: southJoint,
+                  title: "Joint",
+                },
+                {
+                  layer: southZone,
+                  title: "Zones",
+                },
+                {
+                  layer:csvLayer,
+                  title:"CSV"
+                },
+                {
+                  layer: centralPOP,
+                },
+                {
+                  layer: centralFeeder,
+                  title: "Fiber Optical Cable",
+                },
+                {
+                  layer: centralDC,
+                  title: "Distribution Cabinet (DC/ODB)",
+                },
+                {
+                  layer: centralFAT,
+                  title: "FAT",
+                },
+                {
+                  layer: centralJoint,
+                  title: "Joint",
+                },
+                {
+                  layer: centralZone,
+                  title: "Zones",
+                },
+                {
+                  layer: northPOP,
                 },
                 {
                   layer: northFeeder,
@@ -199,10 +249,6 @@ export default function Legend(props) {
                 {
                   layer: northZone,
                   title: "Zones",
-                },
-                {
-                  layer:csvLayer,
-                  title:"CSV"
                 }
               ],
             }),

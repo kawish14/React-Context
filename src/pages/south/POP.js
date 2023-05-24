@@ -81,17 +81,9 @@ export default class POP extends React.Component {
             let feature = response.results[0].graphic;
 
             response.results.map((e) => {
-              if (e.graphic.attributes) {
-                if (
-                  e.graphic.attributes.name === "Rahat POP" ||
-                  e.graphic.attributes.name === "Badar POP" ||
-                  e.graphic.attributes.name === "DHA Phase02 POP" ||
-                  e.graphic.attributes.name === "Plaza POP" ||
-                  e.graphic.attributes.name === "BA POP" ||
-                  e.graphic.attributes.name === "AP" ||
-                  e.graphic.attributes.name === "Gulshan POP"
-                ) {
-
+              if (e.graphic.layer) {
+              
+                if (e.graphic.layer.title === "POP") {
                   southPOP.popupTemplate.actions = [relatedTable];
 
                   _this.setState({
@@ -103,6 +95,7 @@ export default class POP extends React.Component {
                   queryParams.where = `pop_id = ${e.graphic.attributes.id}`;
                 }
               }
+             
             });
 
             southCPELayer.queryFeatures(queryParams).then(function (results) {
@@ -131,8 +124,6 @@ export default class POP extends React.Component {
         const data = new Blob([excelBuffer], { type: fileType });
 
         FileSaver.saveAs(data, ` ${_this.state.popName} - CPE` + fileExtension); */
-
-        let obj = {};
 
         let total_fsp = new Set();
         let maxSlot = -Infinity;
