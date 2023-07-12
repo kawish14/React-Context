@@ -699,7 +699,7 @@ export default class SelectionTool extends React.Component {
           </button>
         </div>
 
-        <div style={{ backgroundColor: "rgb(52, 58, 64)" }}>
+        <div className="main-div" style={{ backgroundColor: "rgb(52, 58, 64)" }}>
           {this.state.selectionTable ? (
             <ul className="nav nav-tabs" navbar>
               {/************************ Selection Tab of Table **********************/}
@@ -766,9 +766,9 @@ export default class SelectionTool extends React.Component {
                           return (
                             <th
                               key={index}
-                              onContextMenu={(event) =>
-                                this.handleRightClick(event, heading)
-                              }
+                              //onContextMenu={(event) =>
+                              //  this.handleRightClick(event, heading)
+                              //}
                             >
                               {heading}
                             </th>

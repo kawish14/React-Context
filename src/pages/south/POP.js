@@ -65,7 +65,7 @@ export default class POP extends React.Component {
     southPOP.labelingInfo = labelClassZone;
 
     let relatedTable = {
-      title: "CPE",
+      title: "OLT",
       id: "related-tableCPE",
       image: "images/database.png",
     };

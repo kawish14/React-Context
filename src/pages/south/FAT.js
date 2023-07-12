@@ -84,7 +84,7 @@ export default class FAT extends React.Component {
   }
   componentDidUpdate(prevProps, prevState){
     if(prevState !== this.state){
-        console.log(this.state)
+       // console.log(this.state)
     }
   }
 

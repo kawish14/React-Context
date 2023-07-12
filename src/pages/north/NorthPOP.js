@@ -65,7 +65,7 @@ export default class NorthPOP extends React.Component {
 
     
     let relatedTable = {
-        title: "CPE",
+        title: "OLT",
         id: "related-tableCPENorth",
         image: "images/database.png",
       };

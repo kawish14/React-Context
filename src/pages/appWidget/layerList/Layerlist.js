@@ -420,10 +420,10 @@ export default class Layerlist extends React.Component {
           />
         </Modal>
 
-     {/*   {this.context.view.loginRole.role === "SouthDEVuser" ?
+       {/*  {this.context.view.loginRole.role === "SouthDEVuser" ?
          <Parcels view={this.props.view} parcelLayer={this.fromChild} /> 
        : null
-        }   */}
+        }    */}
         
       </>
     );

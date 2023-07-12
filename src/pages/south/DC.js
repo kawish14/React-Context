@@ -5,6 +5,7 @@ import { loadModules, setDefaultOptions } from "esri-loader";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { Chart } from "react-google-charts";
+import { NCE } from "../../url";
 
 export default class DC extends React.Component {
   static contextType = mapContext;
@@ -26,13 +27,38 @@ export default class DC extends React.Component {
 
       highlight:null,
       download:null,
-      dc_id:null
+      dc_id:null,
+
+      loading: false,
+      loadingInterval:0,
+      totalCPE:0,
+      percent:0
 
     };
 
     this.chart = React.createRef();
   }
 
+  fetchData = (olt, slot, port, ontid) => {
+    return fetch(`${NCE}/${olt}/${slot}/${port}/${ontid}/`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          var error = new Error(
+            "Error " + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      })
+      .then((power) => {
+        this.setState((prevState) => ({
+          loadingInterval: prevState.loadingInterval + 1,
+        }));
+        return power.ontrx;
+      });
+  };
 
   componentDidMount() {
     let _this = this;
@@ -106,7 +132,7 @@ export default class DC extends React.Component {
     };
 
     const queryParams = southCPELayer.createQuery();
-    queryParams.outFields = ["objectid", "id","dc_id","splitter_id","fat_id", "name", "type", "address", "downtime","uptime","area_town",
+    queryParams.outFields = ["objectid", "id","dc_id","splitter_id", "name", "type", "address", "downtime","uptime","area_town",
                               "sub_area","city","olt", "frame","slot","port","ontid","ontmodel","alarminfo","alarmstate",
                             "ticketstatus","tickettype","ticketopentime","ticketresolvetime"]
 
@@ -140,7 +166,9 @@ export default class DC extends React.Component {
 
                   queryParams.where = `dc_id = ${e.graphic.attributes.id}`;
                   _this.setState({
-                    dc_id:e.graphic.attributes.id
+                    dc_id:e.graphic.attributes.id,
+                    loading:false,
+                    loadingInterval:0
                   })
 
                 }
@@ -152,7 +180,7 @@ export default class DC extends React.Component {
     });
 
     _this.props.view.popup.on("trigger-action", function (event) {
-
+    
       if (event.action.id === "download-CPE") {
         const fileType =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -167,6 +195,7 @@ export default class DC extends React.Component {
       }
 
       if (event.action.id === "CPE-DC") {
+   
         let array = []
 
         _this.props.view
@@ -183,13 +212,52 @@ export default class DC extends React.Component {
                 let gemPacketPopup = [];
                 let lopPopup = [];
 
-                result.features.map((e, i) => {
+                _this.setState({
+                  loading:true,
+                  totalCPE:result.features.length
+                })
+                const promises = result.features.map((e) => {
+                  const data = e.attributes;
 
-                  array.push(e.attributes);
+                  const olt = e.attributes.olt;
+                  const slot = e.attributes.slot;
+                  const port = e.attributes.port;
+                  const ontid = e.attributes.ontid;
+                
+                  return _this.fetchData(olt, slot, port, ontid)
+                    .then((ontrxData) => {
+                      data.ontrx = ontrxData;
 
-                  _this.setState({
-                    download: array,
+                      return data;
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      return data;
+                    });
+                });
+                
+                Promise.all(promises)
+                  .then((dataArray) => {
+                    
+                    dataArray.forEach((data) => {
+                      array.push(data);
+
+                      _this.setState({
+                        download: array,
+                        loading:false,
+                        loadingInterval:0
+                      });
+
+                      southDC.popupTemplate.actions = [download];
+                    });
+
+
+                  })
+                  .catch((err) => {
+                    console.log(err);
                   });
+
+                result.features.map((e, i) => {
 
                   if (e.attributes.alarmstate === 0) {
                     onlinePopup.push(e.attributes);
@@ -205,7 +273,7 @@ export default class DC extends React.Component {
                   }
                   if (e.attributes.alarmstate === 4) {
                     lopPopup.push(e.attributes);
-                    console.log(e.attributes,result.features.length)
+                    
                   }
                 });
 
@@ -318,8 +386,6 @@ export default class DC extends React.Component {
   
                   southDC.popupTemplate = popupTemplate;
 
-                  southDC.popupTemplate.actions = [download];
-  
                 })
                
                 /*************** Apply CSS after passing data into state mentioned above *****************/
@@ -345,6 +411,10 @@ export default class DC extends React.Component {
     }).then(([watchUtils]) => {
       watchUtils.whenTrue(_this.props.view.popup, "visible", function () {
         watchUtils.whenFalseOnce(_this.props.view.popup, "visible", function () {
+          _this.setState({
+            loading:false,
+            loadingInterval:0
+          })
           if (_this.state.highlight) {
   
             _this.state.highlight.remove();
@@ -354,6 +424,17 @@ export default class DC extends React.Component {
       });
     })
 
+  }
+
+  componentDidUpdate(prevProps,prevState){
+    if(prevState.loadingInterval !== this.state.loadingInterval){
+      let percent = this.state.loadingInterval*100/this.state.totalCPE
+
+      this.setState({
+        percent:parseInt(percent.toFixed(0))
+      })
+   
+    }
   }
 
   render() {
@@ -377,6 +458,7 @@ export default class DC extends React.Component {
     return (
 
         <div ref={this.chart} style={{ display: this.state.display }}>
+        <div style={{color:'red', fontWeight:'bold', fontSize:"0.77em"}}>{this.state.loading ? <span>{this.state.percent}% ONTRx Loading....</span> : null } </div>
           {this.state.data !== null ? (
             <Chart
               chartType="PieChart"

@@ -8,6 +8,6 @@ const NCE = `http://gponassistant.tes.com.pk:8000/ontrx` // NCE URL
 /* Private IP and Port */
 /* let api = "http://172.29.100.28:8081" //API URL 
 let authenticate = `http://172.29.100.28:2000/users/authenticate`
-const ENDPOINT = "http://45.249.11.5:5001"; // Real-Time URL 
+const ENDPOINT = "http://172.29.100.28:5000"; // Real-Time URL 
 const NCE = `http://gponassistant.tes.com.pk:8000/ontrx` // NCE URL */
 export {api,authenticate,ENDPOINT,NCE,version}

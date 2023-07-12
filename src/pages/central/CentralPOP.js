@@ -63,7 +63,7 @@ export default class CentralPOP extends React.Component {
     centralPOP.labelingInfo = labelClassZone;
 
     let relatedTable = {
-      title: "CPE",
+      title: "OLT",
       id: "related-tableCPECentral",
       image: "images/database.png",
     };

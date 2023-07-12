@@ -462,7 +462,7 @@ export default function Admin() {
 
              {/*  <OfficeLocations view={view} /> */}
 
-              {/* <ZonesLosiTicket view={view} /> */}
+             {/*  <ZonesLosiTicket view={view} />  */}
 
               
               {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}

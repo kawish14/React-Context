@@ -9,8 +9,7 @@ let northAddGraphic = async (
     lastUptime_complete,
     layer
   ) => {
-    let { loginRole, southCPELayer, northCPELayer, centralCPELayer } =
-      layer;
+    let { loginRole, southCPELayer, northCPELayer, centralCPELayer } = layer;
 
     let real = northCPELayer.createQuery();
     real.where = `alias = '${data.alias}'`;

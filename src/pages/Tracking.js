@@ -3,8 +3,8 @@ import MapContext from "../context/mapContext";
 import { loadModules, setDefaultOptions } from 'esri-loader';
 import socketIOClient from "socket.io-client";
 import {ENDPOINT} from '../url'
-
 import {version} from '../url'
+
 setDefaultOptions({ version: version })
 
 function Tracking (props) {

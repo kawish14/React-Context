@@ -72,7 +72,7 @@ class Realtime extends React.Component {
     lastUptime_complete
   ) {
     let _this = this;
-    let { loginRole, southCPELayer, northCPELayer, centralCPELayer } =
+    let { loginRole, southCPELayer, northCPELayer, centralCPELayer,recentDownSouth } =
       _this.context.view;
 
     if (data.alarmstate == 2) {
@@ -103,7 +103,7 @@ class Realtime extends React.Component {
       await southCPELayer.queryFeatures(south).then(async (res) => {
         await res.features.forEach(async (e) => {
           if (data.alias === e.attributes.id) {
-            
+           
             await southAddGraphic(
               data,
               complete_date,
@@ -118,8 +118,8 @@ class Realtime extends React.Component {
               northCPELayer,
               centralCPELayer
             );
-            CPEStatus.then((data) => {
-              _this.props.southCPEstatus(data);
+            CPEStatus.then((data_) => {
+              _this.props.southCPEstatus(data_);
               SouthRecent(complete_date, _this.context.view);
             });
           }
@@ -484,9 +484,9 @@ class Realtime extends React.Component {
       complete_date: complete_date,
     });
 
-    this.interval = setInterval(() => {
+  /*   this.interval = setInterval(() => {
       this.refreshLayer(complete_date)
-    }, 7 * 60 * 1000);
+    }, 7 * 60 * 1000); */
 
     switch (loginRole.role) {
       case "SouthDEVuser":
@@ -549,7 +549,7 @@ class Realtime extends React.Component {
   componentWillUnmount() {
     socket.disconnect();
     socket.off("endpoint");
-    clearInterval(this.interval);
+   // clearInterval(this.interval);
   }
 
   /*  componentDidUpdate(prevProps, prevState) {

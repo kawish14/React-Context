@@ -254,7 +254,7 @@ export default function NorthMap() {
                 view={view}
               />
 
-              {/*  <ZonesLosiTicket view={view} /> */}
+               <ZonesLosiTicket view={view} /> 
 
               {file === "Upload CSV" && <CSV view={view} fileName={(e)=>updateFile(e)} />}
                 {file === "Upload KML" && <KML view={view} fileName={(e)=>updateFile(e)} />}

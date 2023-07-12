@@ -91,7 +91,7 @@ span.esri-collapse__icon.esri-expand__icon--expanded.esri-icon-collapse,.esri-wi
 input.esri-input.esri-search__input, li.esri-menu__list-item, .esri-popup__header-title
 .esri-popup__inline-actions-container:only-child>.esri-popup__action,.esri-feature__content-element,
 .esri-widget__table tr th, .esri-widget__table tr td,
-h2.esri-widget__heading {
+h2.esri-widget__heading,.esri-widget__heading  {
     color: rgb(109 180 241)
 }
  .esri-layer-list.esri-widget.esri-widget--panel {
