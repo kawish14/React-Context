@@ -1,0 +1,76 @@
+.sc-htoDjs {
+    background-color: blue;
+    padding: 4px;
+    /* size: 16px; */
+    /* animation-delay: 7.8s; */
+    /* animation: -13.8s; */
+}
+.main{
+    width: 400px;
+    height: 400px;
+    background: none;
+    position: relative;
+}
+
+.half{
+    width: 50%;
+    height: 100%;
+    background: none;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 500;
+}
+.full{
+    width: 100%;
+    height: 100%;
+    background: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.half span {
+    width: 100%;
+    height: 100%;
+    border: 20px solid #00b050;
+    display: block;
+    border-radius: 50%;
+    border-top: 20px solid #fff;
+    border-left: 20px solid #fff;
+    transform: rotate(-45deg);
+    animation: turn 2s linear both;
+    animation-delay: 4s;
+}
+@keyframes turn{
+    100%{
+        transform: rotate(135deg);
+    }
+}
+
+.full span{
+    width: 100%;
+    height: 100%;
+    border: 20px solid #00b050;
+    display: block;
+    border-radius: 50%;
+    border-top: 20px solid #fff;
+    border-left: 20px solid #fff;
+    transform: rotate(135deg);
+    animation: turn1 2s linear both;
+}
+@keyframes turn1{
+    100%{
+        transform: rotate(315deg);
+    }
+}
+
+#pHolder{
+    color: #00b050;
+    font-size: 70px;
+    position: absolute;
+    top: 50;
+    left: 50;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,29 @@
+.esri-layer-list.esri-widget.esri-widget--panel {
+    width: 100%;
+  /*   height: 60.8vh; */
+    background-color: #242424
+}
+span.esri-icon-visible, span.esri-layer-list__child-toggle, span.esri-icon-non-visible {
+  color: #1f91f3;
+}
+.esri-layer-list {
+  background-color: #2a2e32;
+  padding: 6px 7px;
+  overflow: auto;
+  color: rgb(31, 145, 243);
+  width: 100%;
+  height:auto;
+  font-weight: bold;
+ /*  border-bottom: 1px solid #6b6b6b; */
+  
+}
+.esri-layer-list__item {
+  background-color: #242424;
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  margin: 3px 0;
+  padding: 0;
+  transition: background-color 125ms ease-in-out;
+}
+

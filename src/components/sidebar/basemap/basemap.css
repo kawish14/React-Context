@@ -1,0 +1,26 @@
+button.basemap.nav-link.collapsed, button.basemap.nav-link {
+    background-color: #242424;
+    border: none;
+    color: #1f8ae6;
+    width: 100%;
+    font-size: 0.9em;
+}
+
+button.basemap.nav-link.collapsed:hover, button.basemap.nav-link:hover {
+    background-color: #1f8ae6;
+    color: #fff;
+  }
+  div#collapseLayouts{
+    background-color: #242424;
+  }
+  button.basemap-button.nav-link{
+    background-color:   #242424;
+    border: none;
+    color: #1f8ae6;
+    font-size: 0.84em;
+
+  }
+  button.basemap-button.nav-link:hover{
+    background-color:  #2e2e2e;
+    color: #fff;
+  }

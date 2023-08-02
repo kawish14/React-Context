@@ -1,0 +1,9 @@
+#coordsWidget {
+    font-size: small;
+    margin: -5px;
+    background-color: #242424;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 2px;
+    color: rgb(31, 145, 243);
+  }

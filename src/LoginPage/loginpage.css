@@ -1,0 +1,33 @@
+.login-container{
+    background: url(/images/nasa5.jpg) no-repeat center center fixed; 
+    height: 100vh;
+    margin-top: 0%;
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    text-align: center;
+}
+.login-div{
+    margin-top: 12%;
+}
+
+.form-label-group{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-group {
+display: flex;
+flex: 1;
+justify-content: space-around;
+}
+
+.btn.btn-primary {
+display: flex;
+padding-left: 50px;
+padding-right: 50px;
+margin-left: 80px;
+box-shadow: 2px 2px #000000;
+}

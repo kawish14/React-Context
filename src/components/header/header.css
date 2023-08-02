@@ -1,0 +1,86 @@
+@media  (max-width:767px){
+    form.form-inline.status.my-lg-0.ms-lg-auto.d-none.d-sm-block.d-md-none{
+        display: none;
+    }
+}
+.sb-topnav.navbar-dark #sidebarToggle{
+    color: rgb(31, 145, 243);
+}
+#heading{
+    color: rgb(31, 145, 243);
+    font-size: 1.2em;
+    font-weight: bold;
+    width: auto;
+}
+#searchForm{
+    padding-left: 35px;
+}
+#notification{
+  display: flex;
+  flex-direction: column;
+}
+/* form.form-inline.my-2.my-lg-0 {
+    margin-left: 5px;
+} */
+button.navbar-toggler.custom-navbar-toggler {
+    border: none;
+     color: rgb(31, 145, 243)
+ }
+
+button.btn.my-2.my-sm-0{
+    color: white;
+    margin-left: 5px;
+    background-color: rgb(31, 145, 243);
+    font-size: small;
+}
+button.btn.my-2.my-sm-0:hover {
+    background-color: rgb(8, 99, 179);
+  }
+
+input.form-control.mr-sm-2{
+    background-color: rgb(37, 38, 39);
+    border: none;
+    color:  rgb(31, 145, 243); 
+    margin-left: 5px;
+    box-shadow: none;
+    padding-top:2px;
+    font-size: 0.9em;
+}   
+.nav-link{
+    margin-right: -12px;
+}
+
+.dropdown-menu.show{
+    background-color: #343a40;
+    color: rgb(31, 145, 243);
+    font-weight: bold;
+    margin-right: -19px;
+    padding: 9px;
+    font-size: 13px;
+}
+
+a.dropdown-toggle.nav-link{
+    color: rgb(31, 145, 243);
+    font-weight: bold;
+}
+
+ li.nav-item{
+    padding: 3px;
+}
+ 
+.label-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .label-container input {
+    margin-right: 5px;
+  }
+  button.ticket{
+    width: 90%;
+    color: white;
+    background-color: #247ac5;
+    border: none;
+    cursor: pointer;
+    
+  }

@@ -1,0 +1,119 @@
+.main_div{
+    height: 100vh;
+}
+
+@media (min-width: 1920px)  {
+  /*  Chrome extra-large screens */
+  #layoutSidenav {
+    height: 93vh;
+    position: fixed;
+    width: 100%;
+
+  }
+  .map{
+      height: 80vh;
+  }
+  .map-expanded {
+    height: 60vh;
+  }
+}
+
+@media (max-width: 1921px) {
+  /* Chrome Large  screens */
+  #layoutSidenav {
+    height: 89.5vh;
+    position: fixed;
+    width: 100%;
+
+  }
+  .map{
+      height: 73.3vh;
+  }
+
+}
+
+@media (min-width: 1865px)  {
+  /*  EDGE extra-large screens */
+  #layoutSidenav {
+    height: 93vh;
+    position: fixed;
+    width: 100%;
+
+  }
+  .map{
+      height: 81vh;
+  }
+  .map-expanded {
+    height: 60vh;
+  }
+}
+
+
+@media (max-width: 1310px) {
+    /** Mobile Screen **/
+    #layoutSidenav {
+      height: auto;
+      position: relative;
+      width: 100%;
+    }
+    .map{
+        height: 88vh;
+    }
+    .column {
+        width: 0%;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+        background-color: #242424;
+    }
+  } 
+
+  /*** FOR TABLE TEXT ***/
+  @media (max-width: 767px) {
+    /* Styles for mobile devices */
+    .heading {
+      font-size: 10px;
+   
+    }
+    
+    .body-text {
+      font-size: 11px;
+  
+    }
+
+  }
+  .nav.status{
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  /*   border: 1px solid #39A2DB; */
+    padding-left: 0px;
+    @media (max-width: 768px) {
+      width: 50%;
+      font-size: 0.7rem;
+    }
+  }
+  
+  .nav.status li{
+    width: 33.33%;
+    padding: 0.2rem;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+ /*    transition: all 0.7s; */
+    color: #39A2DB;
+  }
+  
+  .nav.status li.active {
+    background: #39A2DB;
+    color: white
+  }
+  
+  .esri-feature__content-node {
+    color: #39A2DB;
+    background-color: #242424;
+}

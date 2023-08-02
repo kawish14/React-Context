@@ -1,0 +1,124 @@
+.toggle:hover{
+  -ms-transform: rotate(360deg); /* IE 9 */
+    -webkit-transform: rotate(360deg); /* Safari */
+    transform: rotate(360deg);
+    cursor: pointer;
+}
+svg.svg-inline--fa.fa-bell{
+  color: rgb(31, 145, 243);
+  font-size: 1.1em;
+}
+.notification-count{
+  color: rgb(126, 205, 248);
+  font-weight:500;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: larger;
+}
+@media (min-width: 1920px    /* 1920 */)  { 
+  /*  Chrome extra large screens */
+  .sidebar{
+    position:fixed;
+    width: 15em;
+    right:-500px;
+    box-shadow:0px 0px 10px 3px black;
+    background-color: rgb(36 36 36);
+    border-left:1px solid black;
+    height:94vh;
+    top:56.5px;
+    overflow: auto;
+  }
+}
+@media (max-width: 1919px    /* 1921 */)  { 
+  /*  Chrome large screens */
+  .sidebar{
+    position:fixed;
+    width: 15em;
+    right:-500px;
+    box-shadow:0px 0px 10px 3px black;
+    background-color: rgb(36 36 36);
+    border-left:1px solid black;
+    height:91.2vh;
+    top:56.5px;
+    overflow: auto;
+  }
+}
+@media (max-width: 1310px) {
+  /** Mobile Screen **/
+   .sidebar{
+    position:fixed;
+    width: 15em;
+    right:-500px;
+    box-shadow:0px 0px 10px 3px black;
+    background-color: rgb(36 36 36);
+    border-left:1px solid black;
+    height:88vh;
+    top:56.5px;
+    overflow: auto;
+  }
+}
+
+.sidebar.active{
+right:0px;
+}
+
+.DC-Card.card {
+  background-color: rgb(36 36 36);
+}
+.DC-Card-Header.card-header{
+  color: rgb(31, 145, 243);
+  text-align: center;
+  font-weight: bold;
+  font-size: large;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 2px rgba(104, 104, 104, 0.5);
+  background-color: rgb(49, 14, 14);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.losi-count-icon, .lop-count-icon{
+  font-size: medium;
+}
+svg.svg-inline--fa.fa-circle-exclamation.losi{
+  color: red;
+}
+span.losi-count, span.lop-count{
+  color: rgb(204, 201, 161)
+}
+svg.svg-inline--fa.fa-circle-exclamation.lop{
+  color: yellow;
+}
+.cardbody-div{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.cardbody-key{
+  cursor: pointer;
+}
+.DC-name-address{
+  font-size: 11px;
+  color: rgb(132, 194, 248)
+}
+.DC-address{
+  color: rgb(204, 201, 161)
+}
+.dc-id {
+  color: rgb(31, 145, 243);
+   font-size: 1.05em;
+}
+span.los {
+  color: red;
+  font-size: 10px;
+}
+span.lop {
+  color:yellow;
+  font-size: 10px;
+}
+.icon{
+  color: red;
+}
+.icon-lop{
+  color:yellow;
+}

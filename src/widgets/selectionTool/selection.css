@@ -1,0 +1,209 @@
+.selection.tabs {
+  background-color: #343a40;
+}
+
+.nav.status.selection{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 0px;
+  width: 100%;
+
+  /* @media (max-width: 768px) {
+    width: 100%;
+    font-size: 0.7rem;
+  } */
+}
+
+.tab-div{
+  display: flex;
+  flex-direction: row;
+/*   justify-content: space-evenly; */
+  width: 50%;
+}
+.tab-li{
+  border: 1px solid #025ead;
+ 
+}
+li.tab-li.not-active{
+  font-weight: bold;
+
+}
+li.tab-li.active{
+  font-weight: bold;
+  background: #39A2DB;
+
+}
+.download-button{
+  background-color: #1f91f3;
+  color: white;
+  margin-right: 10px;
+}
+
+.selection.outlet {
+  background-color: #343a40;
+  overflow: auto;
+  margin-bottom: 20px;
+  height: 50vh;
+}
+
+
+@media (max-width: 1921px) {
+  /* Large  screens */
+  .column {
+      width: 16.66%; /* Equal width for each column (total of 100% for 6 columns) */
+    }
+  thead{
+  background-color:#066794;
+  color: white;
+  text-align: center;
+  font-size: 13px;
+  position: sticky;
+  top:0
+  }
+  tbody{
+  color:aliceblue;
+  text-align: center;
+  font-size: 12px;
+  }
+  .tab-li{
+    font-size: 0.8em;
+    
+   }
+}
+
+@media (min-width: 1920px)  {
+  /*  extra-large screens */
+  .column {
+      width: 14.2%; /* Equal width for each column (total of 100% for 6 columns) */
+    }
+  thead{
+  background-color:#066794;
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  position: sticky;
+  top:0
+  }
+  tbody{
+  color:aliceblue;
+  text-align: center;
+  font-size: 13px;
+  }
+  .tab-li{
+    font-size: 0.9em;
+    
+   }
+
+}
+
+
+@media (max-width: 1365px) {
+  /** Mobile Screen **/
+  .column {
+      width: 0%; /* Equal width for each column (total of 100% for 6 columns) */
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+      background-color: #242424;
+  }
+  .tab-li{
+    font-size: 0.68em;
+    
+   }
+}
+
+/*** FOR TABLE TEXT ***/
+@media (max-width: 767px) {
+  /* Styles for mobile devices */
+  .heading {
+    font-size: 10px;
+ 
+  }
+  
+  .body-text {
+    font-size: 11px;
+
+  }
+
+}
+
+#queryDiv{
+  min-width: 250px;
+  font-size: 14px;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
+  color:rgb(31, 145, 243);
+}
+.geometry-options {
+  display: flex;
+  flex-direction: row;
+}
+.geometry-button {
+  flex: 1;
+  border-style: solid;
+  border-width: 1px;
+  border-image: none;
+}
+#clearGeometry{
+  cursor: pointer;
+  background-color: rgb(31, 145, 243);
+  color: white
+}
+.range{
+  font-weight: bold;
+ 
+}
+.range input{
+  background-color: rgb(49, 49, 49);
+  color: white;
+  border-radius: 3px;
+  font-weight: bold;
+}
+.range p{
+  margin-top: 5px;
+  
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 0;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(4, 132, 245);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.buffer{
+  background-color:  rgb(4, 132, 245);
+  border: none;
+  color: white;
+  font-size: smaller;
+  margin-left: 2px;
+}
+.buffer:hover {
+  background-color: rgb(2, 105, 196);
+}
+.length {
+  color: rgb(255, 255, 129);
+}
+.esri-widget--button.esri-icon-map-pin.geometry-button,
+.esri-widget--button.esri-icon-polyline.geometry-button,
+.esri-widget--button.esri-icon-polygon.geometry-button,
+.esri-widget--button.esri-icon-lasso.geometry-button
+{
+  color:rgb(31, 145, 243);
+}

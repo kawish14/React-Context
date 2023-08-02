@@ -1,0 +1,58 @@
+.sb-sidenav-footer{
+ 
+    text-align: center;
+    font-size: 0.8em;
+}
+.small{
+    color: gray;
+}
+div#layoutSidenav_nav{
+    background-color: #242424;
+}
+
+.sb-sidenav-menu-heading {
+    color: #858585;
+    padding: 0.75rem 1rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.esri-layer-list__item--invisible-at-scale .esri-layer-list__item-title,
+.esri-layer-list__item-actions-menu, .esri-layer-list__item-actions-menu-item,
+li.esri-layer-list__item-action{
+    color: rgb(31, 145, 243);
+}
+@media (max-width: 1310px) {
+    /** Mobile Screen **/
+    #layoutSidenav_nav{
+        height: 88vh
+    }
+    .sb-sidenav-menu{
+        overflow-x:hidden;
+        overflow-y: auto;
+    }
+  }
+  
+
+  @media (max-width: 1921px) {
+    /* Chrome Large  screens */
+    #layoutSidenav_nav{
+        height: 'auto'
+    }
+    .sb-sidenav-menu{
+        overflow-x:hidden;
+        overflow-y: auto;
+    }
+  }
+
+
+  @media (min-width: 1920px    /* 1920 */)  { 
+    /*  Chrome extra-large screens */
+    #layoutSidenav_nav{
+        height: 93vh
+    }
+    .sb-sidenav-menu{
+        overflow-x:hidden;
+        overflow-y: auto;
+    }
+}

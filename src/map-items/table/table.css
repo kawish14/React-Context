@@ -1,0 +1,138 @@
+.main_div{
+    height: 100vh;
+}
+.Losi-Card{
+  color: rgb(31, 145, 243);
+  text-align: center;
+  font-weight: bold;
+  background-color: #242424;
+}
+.tab-elements {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+span.tab-element-note{
+  margin-right: 20px;
+  font-size: 0.75em;
+  color: rgb(247, 247, 129);
+}
+.tab-element-note-strong{
+  letter-spacing: 1.5px;
+}
+@media (max-width: 1921px) {
+    /* Large  screens */
+
+    .column {
+        width: 16.66%; /* Equal width for each column (total of 100% for 6 columns) */
+
+      }
+    thead{
+    background-color:#066794;
+    color: white;
+    text-align: center;
+    font-size: 13px;
+    }
+    tbody{
+    color:aliceblue;
+    text-align: center;
+    font-size: 12px;
+    }
+    .Losi-Card{
+      display: none;
+    }
+  }
+  
+  @media (min-width: 1920px)  {
+    /*  extra-large screens */
+    .column {
+        width: 14.2%; /* Equal width for each column (total of 100% for 6 columns) */
+      }
+    thead{
+    background-color:#066794;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    }
+    tbody{
+    color:aliceblue;
+    text-align: center;
+    font-size: 13px;
+    }
+    .Losi-Card{
+      display: none;
+    }
+  }
+
+
+  @media (max-width: 1310px) {
+    /** Mobile Screen **/
+    .column {
+        width: 0%; /* Equal width for each column (total of 100% for 6 columns) */
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+        background-color: #242424;
+    }
+    .Losi-Card{
+      display: block;
+    }
+  }
+
+  /*** FOR TABLE TEXT ***/
+  @media (max-width: 767px) {
+    /* Styles for mobile devices */
+    .heading {
+      font-size: 10px;
+   
+    }
+    
+    .body-text {
+      font-size: 11px;
+  
+    }
+
+  }
+  .nav.status.gpon{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 0px;
+    @media (max-width: 768px) {
+      width: 50%;
+      font-size: 0.7rem;
+    }
+  }
+  
+/*   .nav.status.active{
+    width: 3.33%;
+    padding: 0.2rem;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+     transition: all 0.7s; 
+    color: #39A2DB;
+  } 
+   */
+  .nav.status li.active {
+    background: #39A2DB;
+    color: white
+  }
+  
+ .modal-header{
+  color: rgb(31, 145, 243);
+  background-color:#2a2a2a
+ }
+ .modal-body{
+  color: rgb(31, 145, 243);
+background-color: #2a2a2a
+ }
+.ticket-icon{
+  margin-left:10px;
+  cursor: pointer;
+}
+  
+  
