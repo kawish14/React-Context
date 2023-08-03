@@ -113,11 +113,12 @@ export default class HeaderComponent extends React.Component {
       checked: !this.state.checked,
     });
 
+
     const placeholders = region.map((region, index) => `'${region}'`).join(",");
     if (!this.state.checked) {
       let queryExpression = `alarmstate in (2)`;
 
-       var CQL_FILTER = `region in (${placeholders}) and alarmstate = 2`;
+       var CQL_FILTER = `region in (${placeholders}) and alarmstate in (2)`;
       customer.customParameters.CQL_FILTER = CQL_FILTER;
       customer.definitionExpression = queryExpression;
 
@@ -357,9 +358,9 @@ export default class HeaderComponent extends React.Component {
           </Nav>
         </form>
 
-        {/*    <form className="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" id="notification">
+        <form className="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" id="notification">
             <Notification view={this.props.view} />   
-        </form>   */}
+        </form>   
 
         <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
           <NavLink

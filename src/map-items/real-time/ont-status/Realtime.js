@@ -3,7 +3,6 @@ import MapContext from "../../../context/mapContext";
 import { socket } from "../socket";
 import { addGraphics } from "./addGraphics";
 import { recentDown } from "./RecentDown";
-import {socketData} from '../../../components/header/notification/socketData'
 import axios from 'axios'
 
 export default class Realtime extends React.Component {

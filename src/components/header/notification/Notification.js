@@ -4,16 +4,20 @@ import { loadModules, setDefaultOptions } from "esri-loader";
 import { Card, CardHeader, CardBody, Badge, Col } from "reactstrap";
 import "./notification.css";
 import {version} from '../../../url';
-import {socketData} from './socketData'
+import { socket } from "../../../map-items/real-time/socket";
+import axios from 'axios'
 
 setDefaultOptions({ version: version })
+const allCPE = [];
+
 export default function Notification (props) {
   const context = useContext(MapContext)
-  const {graphicLayerLOPDC,graphicLayerLOSiDC, DC_ODB} = context.view
-  const dcOutage = context.dcOutage
+  const {graphicLayerLOPDC,graphicLayerLOSiDC, DC_ODB,customer,region} = context.view
 
-  const [downDC, setDownDC] = useState([])
-  const [LOPDC, setLOPDC] = useState([])
+  const [downDC, setDownDC] = useState([]);
+  const [LOPDC, setLOPDC] = useState([]);
+
+  const [LOSiDcArray, setLOSiDcArray] = useState([])
 
   const handleDcDown = useCallback((data) => {
     console.log(data);
@@ -137,19 +141,22 @@ export default function Notification (props) {
     })
   }
   useEffect(() => {
-   
-    if(Object.keys(dcOutage).length > 0){
-      handleDcDown(dcOutage.dcDown)
-      handleDcUP(dcOutage.dcLOP)
-    }
-  }, [dcOutage]);
+    handleDcDown(LOSiDcArray)
+  }, [LOSiDcArray]);
 
   useEffect(() =>{
+    const placeholders = region.map((region, index) => `'${region}'`).join(',');
+    axios.get(`http://gis.tes.com.pk:28881/geoserver/web_app/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=web_app%3ACustomers&maxFeatures=1000000&outputFormat=application%2Fjson&CQL_FILTER=region in (${placeholders})`)
+    .then(function (response) {
+      // handle success
+      allCPE.push(response.data.features)
 
-    socketData().then((res) => {
-      handleDcDown(res.dcDown)
-      handleDcUP(res.dcLOP)
-    });
+      socketFun()
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
 
     window.$(".toggle").click(function () {
       //  console.log("toggling sidebar");
@@ -159,9 +166,46 @@ export default function Notification (props) {
       //  console.log("toggling visibility");
         window.$(this).parent().toggleClass("gone");
       });
+
+      return () =>{
+        socket.disconnect();
+      }
   },[]);
 
+  const socketFun = () =>{
+    const dcIds = [...new Set(allCPE[0].map((customer) => customer.properties.dc_id))];
+    socket.on("endpoint", async (data) => {
+      if (data.alarmstate == 2 || data.alarmstate == 4) {
+        let LOS = customer.createQuery();
+        customer.queryFeatures(LOS).then(async function(response){
+            const updatedDcArray = [];
+            dcIds.forEach((dcId) => {
+              const downPercentage = calculateDownPercentage(response.features, dcId);
+              if (downPercentage > 70) {
+                let dcDownStatus = {
+                  'dc_id': parseInt(dcId),
+                  'downPercentage': parseFloat(downPercentage.toFixed(2)),
+                  'Status': 'DC Down'
+                };
+                updatedDcArray.push(dcDownStatus);
+              }
+            });
+            setLOSiDcArray(updatedDcArray);
+        })
+      }
+    })
+  }
+  const calculateDownPercentage = (customers, dcId) => {
+
+    const totalCustomers = allCPE[0].filter((customer) => customer.properties.dc_id === dcId).length;
+    const downCustomers = customers.filter((customer) => customer.attributes.dc_id === dcId && customer.attributes.alarmstate == 2).length;
+   // console.log(downCustomers,'/',totalCustomers)
+    return (downCustomers / totalCustomers) * 100;
+  }
+  
+
   const location = (e) =>{
+    const {DC_ODB} = context.view
     const dataId = e.currentTarget.getAttribute("data-id");
     const queryParamsDC = DC_ODB.createQuery();
 
@@ -192,21 +236,21 @@ export default function Notification (props) {
           <div className="sidebar">
             <Card className="DC-Card">
               <CardHeader className="DC-Card-Header">
-                <div className="losi-count-icon">
+               {/*  <div className="losi-count-icon">
                   <i
                     className="fa fa-exclamation-circle losi"
                     aria-hidden="true"
                   ></i>{" "}
                   <span className="losi-count">{downDC.length}</span>
-                </div>
+                </div> */}
                 Outage{" "}
-                <div className="lop-count-icon">
+               {/*  <div className="lop-count-icon">
                   <span className="lop-count">{LOPDC.length}</span>{" "}
                   <i
                     className="fa fa-exclamation-circle lop"
                     aria-hidden="true"
                   ></i>
-                </div>
+                </div> */}
               </CardHeader>
               <CardBody className="DC-Card-Body">
                 {downDC.length > 0 && (

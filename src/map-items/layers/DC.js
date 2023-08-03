@@ -201,8 +201,7 @@ export default class DC extends React.Component {
         FileSaver.saveAs(data, `DC - ${_this.state.dc_id}` + fileExtension);
       }
 
-      if(customer.customParameters.CQL_FILTER.includes('alarmstate in (0,1,2,3,4)')){
-        if (event.action.id === "CPE-DC") {
+      if(customer.customParameters.CQL_FILTER.includes('alarmstate in (0,1,2,3,4)') && event.action.id === "CPE-DC"){
    
           let array = []
   
@@ -224,7 +223,7 @@ export default class DC extends React.Component {
                     loading:true,
                     totalCPE:result.features.length
                   })
-                  const promises = result.features.map((e) => {
+                /*   const promises = result.features.map((e) => {
                     const data = e.attributes;
   
                     const olt = e.attributes.olt;
@@ -262,9 +261,10 @@ export default class DC extends React.Component {
                     })
                     .catch((err) => {
                       console.log(err);
-                    });
+                    }); */
   
                   result.features.map((e, i) => {
+                    array.push(e.attributes);
   
                     if (e.attributes.alarmstate === 0) {
                       onlinePopup.push(e.attributes);
@@ -283,7 +283,11 @@ export default class DC extends React.Component {
                       
                     }
                   });
-  
+                  
+                  _this.setState({
+                    download:array
+                  })
+
                   /************************ Chart Data ***************************/
   
                   let data = [
@@ -392,29 +396,43 @@ export default class DC extends React.Component {
                     };
     
                     DC_ODB.popupTemplate = popupTemplate;
+                    DC_ODB.popupTemplate.actions = [download];
   
                   })
                  
                   /*************** Apply CSS after passing data into state mentioned above *****************/
-  
+                  
+                  customer.featureEffect = {
+                    filter: {
+                      objectIds: result.features
+                    },
+                    excludedEffect: "blur(5px) grayscale(90%) opacity(40%)"
+                  };
+
                   if (_this.state.highlight) {
                     _this.state.highlight.remove();
                   }
-  
+     
                   _this.setState({
                     display: "block",
                     highlight : layerView.highlight(result.features)
                   })
                  
+                  const highlightedGraphics = result.features.map(feature => feature.clone());
+                  _this.props.view.goTo(highlightedGraphics);
+
                 }
   
               });
             });
-        }
+        
       }
-      else{
+      else if (!customer.customParameters.CQL_FILTER.includes('alarmstate in (0,1,2,3,4)') && event.action.id === "CPE-DC"){
         alert("First Select All Customers")
       }
+      else{
+       return;
+      } 
       
     });
 
@@ -431,6 +449,7 @@ export default class DC extends React.Component {
           if (_this.state.highlight) {
   
             _this.state.highlight.remove();
+            customer.featureEffect = false
             
           }
         });
@@ -476,7 +495,7 @@ export default class DC extends React.Component {
     return (
 
         <div ref={this.chart} style={{ display: this.state.display }}>
-        <div style={{color:'red', fontWeight:'bold', fontSize:"0.77em"}}>{this.state.loading ? <span>{this.state.percent}% ONTRx Loading....</span> : null } </div>
+       {/*  <div style={{color:'red', fontWeight:'bold', fontSize:"0.77em"}}>{this.state.loading ? <span>{this.state.percent}% ONTRx Loading....</span> : null } </div> */}
           {this.state.data !== null ? (
             <Chart
               chartType="PieChart"

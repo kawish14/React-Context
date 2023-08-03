@@ -44,8 +44,6 @@ const MapState = (props) => {
     csvLayer: {},
   };
 
-  const [cpeSelection, setCpeSelection] = useState("Checked One");
-
   authenticationService.currentUser.subscribe((x) => {
     if (x) {
       if (x.role === "SouthDEVuser") {
@@ -86,7 +84,6 @@ const MapState = (props) => {
     return (view.loginRole = x);
   });
 
-
   function layers(CQL_FILTER) {
 
     const placeholders = view.region.map((region, index) => `'${region}'`).join(',');
@@ -101,7 +98,7 @@ const MapState = (props) => {
       const customer = new GeoJSONLayer({
         url: api + "/geoserver/web_app/ows",
         customParameters: {
-          CQL_FILTER: `region in (${placeholders}) and alarmstate = 2`,
+          CQL_FILTER: `region in (${placeholders}) and alarmstate in (2)`,
           maxFeatures: "1000000",
           outputFormat: "application/json",
           request: "GetFeature",
@@ -967,7 +964,6 @@ const MapState = (props) => {
       allCPE.queryFeatures().then(function(response){
         view.allCPE = response.features
       });
-
       view.customer = customer;
       view.InactiveCPE = InactiveCPE;
       view.DC_ODB = DC_ODB;
