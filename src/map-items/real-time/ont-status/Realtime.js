@@ -80,8 +80,6 @@ export default class Realtime extends React.Component {
       } 
       
       if (data.alarmstate == 2 || data.alarmstate == 4) {
-        
-         await recentDown(this.context.view);
 
          let graphic = addGraphics(
           data,
@@ -94,6 +92,7 @@ export default class Realtime extends React.Component {
           _this.props.region(region);
         });
 
+        await recentDown(this.context.view);
       }
 
        if (data.alarmstate == 0 || data.alarmstate == 1) {
@@ -103,7 +102,7 @@ export default class Realtime extends React.Component {
         await customer.queryFeatures(real).then((res) => {
           res.features.forEach(async (element) => {
             if (data.alias === element.attributes.id) {
-              await recentDown(_this.context.view);
+              
               let graphic = addGraphics(
                 data,
                 lastDowntime_complete,
@@ -114,6 +113,8 @@ export default class Realtime extends React.Component {
               graphic.then((region) => {
                 _this.props.region(region);
               });
+
+              await recentDown(_this.context.view);
             }
           });
         });

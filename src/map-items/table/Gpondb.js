@@ -40,17 +40,15 @@ const Gpondb = forwardRef((props,ref) => {
 
   const context = useContext(MapContext);
   const  {customer,loginRole} = context.view;
-  const setDcOutage = context.setDcOutage
-  const cardRef = useRef()
 
   const [isModalOpen, UpdateIsModalOpen] = useState(false);
 
   const [ticketInfo, updateTicketInfo] = useState(null)
 
   const [activeTab, setActiveTab] = useState("South");
+  const [areaMapping, SetAreaMapping] = useState({})
   const [region, setRegion] = useState(null)
-  const [display, setDisplay] = useState('block')
-  const [cardDisplay, setCardDisplay] = useState('none')
+  const [visibility, setVisibility] = useState('visible')
 
   const [ticket, setTicket] = useState(null)
   const [LOSWeek, setLOSWeek] = useState(null)
@@ -60,7 +58,8 @@ const Gpondb = forwardRef((props,ref) => {
   const [GEMPack, setGEMPack] = useState(null)
   const [LOP, setLOP] = useState(null);
 
-  const [table, setTable] = useState([])
+ // const [sqlWhere, setSqlWhere] = useState(`region = '${activeTab}' AND ticketstatus = 'In-process'`);
+  const [OLT,setOLT] = useState([])
 
   React.useImperativeHandle(ref, () => ({
     tableData,
@@ -68,42 +67,21 @@ const Gpondb = forwardRef((props,ref) => {
 
   useEffect(() => {
     let view = props.view
-    loadModules(["esri/layers/GraphicsLayer", "esri/widgets/Expand"], {
-      css: false,
-    }).then(([GraphicsLayer, Expand]) => {
+    
+    if (window.innerWidth >= 767) {
+      setVisibility('visible')
+    }
+    else{
+      setVisibility('hidden')
+    }
 
-      let layerListExpand = new Expand({
-        expandIconClass: "esri-icon-notice-round",
-        view: view,
-        content: cardRef.current,
-        group: "bottom-right",
-        expanded: false,
-        expandTooltip: "ALarm Info",
-      });
-   
-      if (window.innerWidth >= 1310) {
-        setDisplay("block");
-       // setCardDisplay("none");
-        view.ui.remove(layerListExpand);
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 767) {
+        setVisibility('visible')
       }
-
-      if (window.innerWidth <= 1310) {
-        setDisplay("none");
-       // setCardDisplay("block");
-        view.ui.add(layerListExpand, "top-right");
+      else{
+        setVisibility('hidden')
       }
-
-      window.addEventListener("resize", () => {
-        if (window.innerWidth >= 1310) {
-          setDisplay("block");
-        //  setCardDisplay("none");
-          view.ui.remove(layerListExpand);
-        } else {
-          setDisplay("none");
-        //  setCardDisplay("block");
-          view.ui.add(layerListExpand,'top-right');
-        }
-      });
     });
 
     let query = customer.createQuery();
@@ -121,12 +99,14 @@ const Gpondb = forwardRef((props,ref) => {
           tableData(`'${region}'`);
         }
       });
+
     });
+
   }, []);
 
   useEffect(() =>{
-    tableData(activeTab)
-  },[activeTab])
+    tableData(activeTab);
+  },[activeTab]);
 
   let toggleModal = () => {
 
@@ -134,93 +114,9 @@ const Gpondb = forwardRef((props,ref) => {
 
   };
 
-  const ticketModal = () => {
-
-    if(props.ticket === "All Ticket"){
-      loadModules(["esri/smartMapping/statistics/uniqueValues"],{ css: false })
-    .then(async ([uniqueValues]) => {
-      uniqueValues({
-        layer: customer,
-        field: "area_town",
-        sqlWhere: `region = '${activeTab}' AND ticketstatus = 'In-process'`,
-      }).then(function (response) {
-        // prints each unique value and the count of features containing that value
-        let infos = response.uniqueValueInfos;
-
-        let options = {
-          animationEnabled: true,
-          exportEnabled: false,
-          theme: "dark1", // "light1", "dark1", "dark2",
-          toolTip: {
-            content: "Count of {label}: {name}",
-          },
-          legend: {
-            fontSize: 10,
-            fontColor: "rgb(31, 145, 243)",
-            fontFamily: "Arial, Helvetica, sans-serif",
-            fontStyle: "normal",
-            itemWidth: 200,
-            horizontalAlign: "left",
-            // maxWidth: 400
-          },
-          /*    title:{
-                    text:"Area Wise Ticket Status",
-                    fontSize:18,
-                    fontWeight:"bold",
-                    fontColor:'rgb(31, 145, 243)',
-                    fontStyle: 'normal',
-                    fontFamily:'Arial, Helvetica, sans-serif'
-                  }, */
-          data: [
-            {
-              type: "pie",
-              indexLabelPlacement: "outside",
-              indexLabel: "{label}: {y}%",
-              indexLabelFontSize: 12,
-              indexLabelFontColor: "rgb(31, 145, 243)",
-              indexLabelFontFamily: "Arial, Helvetica, sans-serif",
-              indexLabelFontStyle: "normal",
-              startAngle: -90,
-              showInLegend: true,
-              legendText: "{label}",
-              dataPoints: [],
-            },
-          ],
-        };
-
-        var msgTotal = infos.reduce(function (prev, cur) {
-          return prev + cur.count;
-        }, 0);
-
-        infos.forEach(function (info) {
-          let a = parseInt(info.count * 100);
-          let percentage = parseFloat(a / msgTotal);
-
-          let c = {
-            y: percentage.toFixed(2),
-            label: info.value,
-            name: info.count.toString(),
-          };
-          options.data[0].dataPoints.push(c);
-        });
-
-        updateTicketInfo(options);
-      })
-
-    });
-
-    toggleModal()
-    }
-    else {
-        alert("First Select the Tickets from Dropdown List")
-    }
-  }
-
 const handleTab = (region) => {
-
   setActiveTab(region);
-
-  tableData(region)
+  tableData(region);
 
   if(region === "South") {
     props.view
@@ -280,7 +176,6 @@ const tableData = (region) => {
     let DyingGasp = customer.createQuery();
     let GEMPack = customer.createQuery();
     let LOP = customer.createQuery();
-
     let Ticket = customer.createQuery();
 
     // Tickets
@@ -357,7 +252,7 @@ const generateTable = (region) => {
               {ticket !== 0 && (
                 <th className="heading">
                   Tickets
-                  <span className="ticket-icon" onClick={ticketModal}>
+                  <span className="ticket-icon" onClick={ticketModal} style={{visibility:visibility}}>
                     <i className="fa fa-info-circle fa-lg"></i>
                   </span>
                 </th>
@@ -387,12 +282,160 @@ const generateTable = (region) => {
     }
 
 };
+
+const ticketModal = () => {
+
+  if(props.ticket === "All Ticket"){
+
+    let olt = customer.createQuery();
+    olt.where = `region = '${activeTab}'`
+    customer.queryFeatures(olt).then(function(response){
+      const oltNames = response.features.map(item => item.attributes.olt);
+      const distinctOLTs = [...new Set(oltNames)];
+      setOLT(distinctOLTs);
+
+      response.features.map(e =>{
+        const area  = e.attributes.area_town
+        const sub_area  = e.attributes.sub_area
+        if (area && sub_area) {
+          // Build the areaMapping
+          if (!areaMapping[sub_area]) {
+            areaMapping[sub_area] = area;
+          }
+        }
+      });
+      SetAreaMapping(areaMapping)
+    })
+
+ const sqlWhere = `region = '${activeTab}' AND ticketstatus = 'In-process'`
+ chart(sqlWhere, "area_town")
+
+  toggleModal();
+
+  }
+  else {
+      alert("First Select the Tickets from Dropdown List")
+  }
+
+}
+
+const OLTwiseTicket = (e) =>{
+ // setSqlWhere(`region = '${activeTab}' AND ticketstatus = 'In-process' and olt = '${e.target.value}'`)
+ const sqlWhere = `region = '${activeTab}' AND ticketstatus = 'In-process' and olt = '${e.target.value}'`
+ chart(sqlWhere, "sub_area")
+}
+
+const chart = (sqlWhere, field) =>{
+  loadModules(["esri/smartMapping/statistics/uniqueValues"],{ css: false })
+  .then(async ([uniqueValues]) => {
+    uniqueValues({
+      layer: customer,
+      field: field,
+      sqlWhere: sqlWhere,
+    }).then(function (response) {
+      // prints each unique value and the count of features containing that value
+      let infos = response.uniqueValueInfos;
+    
+      // Map to store combined labels
+      let combinedLabelsMap = new Map();
+
+      let options = {
+        animationEnabled: true,
+        exportEnabled: false,
+        theme: "dark1",
+        toolTip: {
+          content: "Count of {label}: {name}",
+        },
+        legend: {
+          fontSize: 10,
+          fontColor: "rgb(31, 145, 243)",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontStyle: "normal",
+          itemWidth: 200,
+          horizontalAlign: "left",
+        },
+        data: [
+          {
+            type: "pie",
+            indexLabelPlacement: "outside",
+            indexLabel: "{label}: {y}%",
+            indexLabelFontSize: 12,
+            indexLabelFontColor: "rgb(31, 145, 243)",
+            indexLabelFontFamily: "Arial, Helvetica, sans-serif",
+            indexLabelFontStyle: "normal",
+            startAngle: -90,
+            showInLegend: true,
+            legendText: "{label}",
+            dataPoints: [],
+          },
+        ],
+      };
+
+      if(field === "sub_area"){
+        infos.forEach(function (info) {
+          // let area = getAreaForBlock(`"${info.value}"`); // Define a function to retrieve the area for a given block
+           let area = areaMapping[info.value] 
+          let combinedLabel = `${area} ${info.value}`;
+   
+           if (!combinedLabelsMap.has(combinedLabel)) {
+             combinedLabelsMap.set(combinedLabel, {
+               count: info.count,
+               block: combinedLabel,
+             });
+           } else {
+             combinedLabelsMap.get(combinedLabel).count += info.count;
+           }
+         });
+  
+        let msgTotal = 0;
+      
+        combinedLabelsMap.forEach(function (info) {
+          msgTotal += info.count;
+        });
+      
+        combinedLabelsMap.forEach(function (info) {
+          let percentage = parseFloat((info.count / msgTotal) * 100);
+      
+          let dataPoint = {
+            y: percentage.toFixed(2),
+            label: info.block,
+            name: info.count.toString(),
+          };
+      
+          options.data[0].dataPoints.push(dataPoint);
+        });
+      }
+      else{
+        
+        var msgTotal = infos.reduce(function (prev, cur) {
+          return prev + cur.count;
+        }, 0);
+
+        infos.forEach(function (info) {
+          let a = parseInt(info.count * 100);
+          let percentage = parseFloat(a / msgTotal);
+
+          let c = {
+            y: percentage.toFixed(2),
+            label: info.value,
+            name: info.count.toString(),
+          };
+          options.data[0].dataPoints.push(c);
+        });
+      }
+    
+    
+      updateTicketInfo(options);
+    });
+    
+  });
+}
   return (
     <div className="row">
       <Realtime view={props.view} region={tableData} />
       {props.summary ? null : (
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <div className="tabs" style={{ display: display }}>
+          <div className="tabs" >
             <div className="tab-elements">
               <ul className="nav status gpon">
                 {region === null ? (
@@ -411,18 +454,35 @@ const generateTable = (region) => {
                   })
                 )}
               </ul>
-              <span className="tab-element-note" ><strong className="tab-element-note-strong">Ticket's</strong> count in the table is based on the current selection of <strong className="tab-element-note-strong">Customer Status</strong></span>
+              <span className="tab-element-note">
+                <strong className="tab-element-note-strong">Ticket's</strong>{" "}
+                count in the table is based on the current selection of{" "}
+                <strong className="tab-element-note-strong">
+                  Customer Status
+                </strong>
+              </span>
             </div>
           </div>
 
-          <div className="outlet" style={{ display: display }}>
+          <div className="outlet" >
             {generateTable("South")}
             {generateTable("North")}
             {generateTable("Central")}
           </div>
 
           <Modal isOpen={isModalOpen} toggle={toggleModal}>
-            <ModalHeader>Area Wise Ticket Status</ModalHeader>
+            <ModalHeader>
+                <span className="ticket-status-text">
+                  Area Wise Ticket Status
+                </span>
+                <select className="pop-select" onChange={OLTwiseTicket}>
+                  <option >Select OLT</option>
+                  {OLT.map((data,index) =>{
+                    return <option className="pop-names" key={index} value={data}>{data}</option>
+                  })}
+                </select>
+
+            </ModalHeader>
             <ModalBody>
               {ticketInfo && isModalOpen ? (
                 <CanvasJSChart options={ticketInfo} />
@@ -430,7 +490,7 @@ const generateTable = (region) => {
             </ModalBody>
           </Modal>
 
-          <div ref={cardRef} className="Losi-Card" display={cardDisplay}>
+       {/*    <div ref={cardRef} className="Losi-Card" display={cardDisplay}>
             <div className="list-group-item list-group-item-danger">
               LOSi Alarms
             </div>
@@ -439,7 +499,7 @@ const generateTable = (region) => {
               &nbsp;&nbsp; &nbsp;&nbsp;{" "}
               <i class="fas fa-circle" style={styels.LOSOrange}></i> {LOSOld}
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

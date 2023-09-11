@@ -1,7 +1,6 @@
 .selection.tabs {
   background-color: #343a40;
 }
-
 .nav.status.selection{
   display: flex;
   flex-direction: row;
@@ -206,4 +205,12 @@ input[type=range]::-webkit-slider-thumb {
 .esri-widget--button.esri-icon-lasso.geometry-button
 {
   color:rgb(31, 145, 243);
+}
+.esri-widget--button.esri-icon-map-pin.geometry-button.active,
+.esri-widget--button.esri-icon-polyline.geometry-button.active,
+.esri-widget--button.esri-icon-polygon.geometry-button.active,
+.esri-widget--button.esri-icon-lasso.geometry-button.active {
+  background-color: rgb(31, 144, 243); /* Change the background color */
+  color: rgb(255, 255, 255)/* Change the text color */
+  /* Add any other styles you want for the active button */
 }

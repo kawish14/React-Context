@@ -84,3 +84,17 @@ a.dropdown-toggle.nav-link{
     cursor: pointer;
     
   }
+
+  @media (max-width: 767px) {
+    /* Styles for mobile devices */
+    ul.navbar-nav.ms-auto.ms-md-0.me-3.me-lg-4.nav {
+        font-size: 0.9em;
+    }
+    .dropdown-menu.show{
+        font-size: 0.8em;
+    }
+    button.btn.my-2.my-sm-0.ticket{
+        font-size: 01em;
+    }
+
+  }

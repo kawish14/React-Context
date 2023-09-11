@@ -6,8 +6,10 @@
 .small{
     color: gray;
 }
+
 div#layoutSidenav_nav{
     background-color: #242424;
+
 }
 
 .sb-sidenav-menu-heading {
@@ -31,6 +33,7 @@ li.esri-layer-list__item-action{
         overflow-x:hidden;
         overflow-y: auto;
     }
+    
   }
   
 
@@ -43,8 +46,9 @@ li.esri-layer-list__item-action{
         overflow-x:hidden;
         overflow-y: auto;
     }
+    
   }
-
+ 
 
   @media (min-width: 1920px    /* 1920 */)  { 
     /*  Chrome extra-large screens */
@@ -55,4 +59,6 @@ li.esri-layer-list__item-action{
         overflow-x:hidden;
         overflow-y: auto;
     }
+    
+   
 }

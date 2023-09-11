@@ -31,6 +31,8 @@ const MapState = (props) => {
     Feeder: {},
     Zone: {},
     Backhaul: {},
+    Outage:{},
+    WMSlayer:{},
 
     vehicleLayer: {},
 
@@ -46,6 +48,7 @@ const MapState = (props) => {
 
   authenticationService.currentUser.subscribe((x) => {
     if (x) {
+     
       if (x.role === "SouthDEVuser") {
         view.region = ['South']
         let CQL_FILTER = `region= 'South'`;
@@ -87,12 +90,13 @@ const MapState = (props) => {
   function layers(CQL_FILTER) {
 
     const placeholders = view.region.map((region, index) => `'${region}'`).join(',');
+    console.log(placeholders)
     loadModules(
-      ["esri/layers/GeoJSONLayer", "esri/layers/GraphicsLayer", "esri/Graphic"],
+      ["esri/layers/GeoJSONLayer","esri/layers/WMSLayer", "esri/layers/GraphicsLayer", "esri/Graphic"],
       {
         css: false,
       }
-    ).then(([GeoJSONLayer, GraphicsLayer, Graphic]) => {
+    ).then(([GeoJSONLayer,WMSLayer, GraphicsLayer, Graphic]) => {
       /*************************** NETWORK SERVICES ******************************/
 
       const customer = new GeoJSONLayer({
@@ -109,7 +113,7 @@ const MapState = (props) => {
         labelsVisible: false,
         title: "Active Customer",
         minScale: 1155581,
-        legendEnabled: false,
+        legendEnabled: true,
         editingEnabled: true,
         visible: true,
         outFields: [
@@ -303,7 +307,7 @@ const MapState = (props) => {
           `/geoserver/web_app/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=web_app%3ATerminated_CPE&maxFeatures=1000000&CQL_FILTER=${CQL_FILTER}&outputFormat=application%2Fjson`,
         title: "Inactive Customer",
         minScale: 1155581,
-        legendEnabled: false,
+        legendEnabled: true,
         visible: false,
         selection: false,
         outFields: [
@@ -961,9 +965,132 @@ const MapState = (props) => {
         outFields: ["cluster", "zone", "area", "sub_area", "city"],
       });
 
+      const Outage = new GeoJSONLayer({
+        url:
+          api +
+          `/geoserver/web_app/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=web_app%3Aoutage&maxFeatures=1000000&CQL_FILTER=${CQL_FILTER}&outputFormat=application%2Fjson`,
+        labelsVisible: false,
+        title: "Outage",
+        minScale: 1155581,
+        outFields: [
+          "cable_type",
+          "olt",
+          "fsp",
+          "outage_time",
+          "resolve_time",
+          "landmark",
+          "affected_customers",
+          "category",
+          "sub_category",
+          "region",
+          "comment"
+        ],
+        popupTemplate: {
+          title: "Outage",
+          content: [
+            {
+              type: "fields",
+              fieldInfos: [
+                {
+                  fieldName: "cable_type",
+                  visible: true,
+                  label: "Cable Type",
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "olt",
+                  label: "OLT",
+                  visible: true,
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "fsp",
+                  label: "Affected FSPs",
+                  visible: true,
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "affected_customers",
+                  label: "Affected Customers",
+                  visible: true,
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "outage_time",
+                  visible: true,
+                  label: "Outage Time",
+                },
+                {
+                  fieldName: "resolve_time",
+                  label: "Resolve Time",
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "category",
+                  visible: true,
+                  label: "Category",
+                },
+                {
+                  fieldName: "sub_category",
+                  label: "Sub Category",
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "landmark",
+                  label: "Landmark",
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                },
+                {
+                  fieldName: "comment",
+                  label: "Comment",
+                  format: {
+                    digitSeparator: false,
+                    places: 0,
+                  },
+                }
+              ],
+            },
+          ],
+        },
+      });
+
+      const WMSlayer = new WMSLayer({
+        url: `${api}/geoserver/South_PostGIS/wms`,
+        title: "Parcels",
+        sublayers: [
+          {
+            name: "parcel_evw",
+           // title: `${SelectTownData} - ${SelectBlockData} - ${SelectSubBlockData}`,
+          },
+        ],
+        customLayerParameters: '',
+      });
+
       allCPE.queryFeatures().then(function(response){
         view.allCPE = response.features
       });
+
       view.customer = customer;
       view.InactiveCPE = InactiveCPE;
       view.DC_ODB = DC_ODB;
@@ -974,6 +1101,8 @@ const MapState = (props) => {
       view.Distribution = Distribution;
       view.Backhaul = Backhaul;
       view.Zone = Zone;
+      view.Outage = Outage
+      view.WMSlayer = WMSlayer
 
       /*************************** OTHER SERVICES ******************************/
 
@@ -1007,6 +1136,7 @@ const MapState = (props) => {
         title: "Vehicles",
         listMode: "show",
         labelsVisible: false,
+        legendEnabled: true,
         minScale: 1155581,
       });
 
@@ -1025,6 +1155,7 @@ const MapState = (props) => {
         title: "DC Outage",
         listMode: "hide",
         labelsVisible: false,
+        legendEnabled: false,
         graphics: [],
         minScale: 1155581,
       });
@@ -1035,6 +1166,7 @@ const MapState = (props) => {
         title: "DC Outage",
         listMode: "hide",
         labelsVisible: false,
+        legendEnabled: false,
         graphics: [],
         minScale: 1155581,
       });

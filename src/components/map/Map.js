@@ -40,12 +40,17 @@ import POP from "../../map-items/layers/POP";
 import Zone from "../../map-items/layers/Zone";
 import HomeWidget from "../../widgets/mini-widgets/HomeWidget";
 import CoordinateWidget from "../../widgets/mini-widgets/CoordinateWidget";
+import Editor from "../../widgets/editor/Editor";
+import Legend from "../../widgets/legend/Legend";
+import Outage from "../../map-items/layers/Outage";
+import GISEditor from "../../widgets/editor/GISEditor";
 
 setDefaultOptions({ version: version });
 
 export default function Map() {
 
   const context = useContext(MapContext)
+  const {loginRole} = context.view
 
   const mapRef = useRef();
   const loading = useRef();
@@ -225,6 +230,7 @@ useEffect(() =>{
             ticket={updateTicketFun}
             search={search}
             gponTable={setGponTable}
+            file={updateFile}
           />
         )}
       </nav>
@@ -249,11 +255,19 @@ useEffect(() =>{
                       <Distribution view={view} />
                       <Backhaul view={view} />
                       <Zone view={view} />
-                      <SearchWidget view={view} />
-                      <Tracking view={view} searchUpdateFun={searchUpdateFun} />
+                      <Outage view={view} />
 
+                      <SearchWidget view={view} />
+                      {loginRole.permission === "Edit" ? <Editor view={view} /> : null}
+                      {loginRole.permission === "GIS" ? <GISEditor view={view} /> : null}
+
+                      <Tracking view={view} searchUpdateFun={searchUpdateFun} />
                       <HomeWidget view={view} />
                       <CoordinateWidget view={view} />
+                      <Legend view={view} />
+       
+                     {/* {file === "Upload GeoJSON" && <UploadGeoJSON view={view} fileName={(e)=>updateFile(e)} />} */}
+                       
                     </>
                   )}
                 </div>

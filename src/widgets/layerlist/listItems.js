@@ -1,6 +1,7 @@
+import { timers } from "jquery";
+
 const listItems = (event) =>{
     let item = event.item
-      
     if(item.title === "Layers"){
       //  item.open = true;
   /*       item.actionsSections = [
@@ -49,6 +50,18 @@ const listItems = (event) =>{
               },
             ],
           ];
+    }
+
+    if(item.title === "Outage"){
+      item.actionsSections = [
+        [
+          {
+            title: "Filter Outages",
+            className: "esri-icon-filter",
+            id: "filter-outages",
+          },
+        ],
+      ];
     }
 }
 

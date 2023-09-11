@@ -28,7 +28,7 @@ export default class SelectionTool extends React.Component {
     this.state = {
       display: "block",
       visibility: "visible",
-
+      activeButton: "",
       sketchLayer: null,
       bufferLayer: null,
 
@@ -76,7 +76,7 @@ export default class SelectionTool extends React.Component {
         }),
       });
 
-      view.map.addMany([_this.state.sketchLayer, _this.state.bufferLayer]);
+      view.map.addMany([ _this.state.bufferLayer,_this.state.sketchLayer]);
 
       let layerListExpand = new Expand({
         expandIconClass: "esri-icon-cursor-marquee",
@@ -117,7 +117,9 @@ export default class SelectionTool extends React.Component {
     _this.state.sketchLayer.removeAll();
     _this.state.bufferLayer.removeAll();
 
-
+    this.setState({
+      activeButton: event.target.value
+    });
     const geometryType = event.target.value;
 
     loadModules(
@@ -188,7 +190,6 @@ export default class SelectionTool extends React.Component {
             });
 
             //
-
             _this.state.sketchLayer.graphics.items[0].symbol = {
               type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
               style: "circle",
@@ -612,28 +613,28 @@ export default class SelectionTool extends React.Component {
           Draw a geometry to query by:
           <div className="geometry-options" title="select graphics">
             <button
-              className="esri-widget--button esri-icon-map-pin geometry-button"
+              className={`esri-widget--button esri-icon-map-pin geometry-button ${this.state.activeButton === "point" ? "active" : ""}`}
               id="point-geometry-button"
               value="point"
               title="point"
               onClick={this.selectByGraphic}
             ></button>
             <button
-              className="esri-widget--button esri-icon-polyline geometry-button"
+              className={`esri-widget--button esri-icon-polyline geometry-button ${this.state.activeButton === "polyline" ? "active" : ""}`}
               id="line-geometry-button"
               value="polyline"
               title="line"
               onClick={this.selectByGraphic}
             ></button>
             <button
-              className="esri-widget--button esri-icon-polygon geometry-button"
+              className={`esri-widget--button esri-icon-polygon geometry-button ${this.state.activeButton === "polygon" ? "active" : ""}`}
               id="polygon-geometry-button"
               value="polygon"
               title="polygon"
               onClick={this.selectByGraphic}
             ></button>
             <button
-              className="esri-widget--button esri-icon-lasso geometry-button"
+              className={`esri-widget--button esri-icon-lasso geometry-button ${this.state.activeButton === "lasso" ? "active" : ""}`}
               id="lasso-geometry-button"
               value="lasso"
               title="lasso"

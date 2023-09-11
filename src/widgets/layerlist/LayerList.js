@@ -5,6 +5,7 @@ import { listItems } from "./listItems";
 import {triggerAction} from './triggerAction'
 import { version } from "../../url";
 import './layerlist.css';
+import Parcels from "../../map-items/layers/Parcels";
 
 setDefaultOptions({ version: version });
 
@@ -14,7 +15,9 @@ export default class LayerList extends React.Component {
   static contextType = MapContext;
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      parcelLayer:null
+    };
 
     this.layerLists = React.createRef();
   }
@@ -34,10 +37,12 @@ export default class LayerList extends React.Component {
       Distribution,
       Backhaul,
       Zone,
+      Outage,
       province,
       graphicLayerOffice,
       graphicLayerLOSiDC,
-      graphicLayerLOPDC
+      graphicLayerLOPDC,
+      loginRole
     } = this.context.view;
 
     loadModules(
@@ -55,15 +60,23 @@ export default class LayerList extends React.Component {
         });
 
         layers = new GroupLayer({
-          title:"Layers",
+          title:"Network Layer",
           listMode:'show',
-          layers:[Zone,fiber,POP,Joint, DC_ODB,FAT,customerList,graphicLayer]
+         // layers:[Zone,fiber,POP,Joint, DC_ODB,FAT,customerList,graphicLayer]
         });
 
+        if(loginRole.role === 'Admin'){
+          layers.layers = [Zone,fiber,POP,Joint, DC_ODB,FAT,customerList]
+        }
+        else{
+          layers.layers = [Zone,fiber,POP,Joint, DC_ODB,FAT,customer]
+        }
+        view.map.add(this.state.parcelLayer)
         view.map.add(layers)
+        view.map.add(Outage)
+        view.map.add(graphicLayer)
         view.map.add(recentDown);
-        view.map.add(graphicLayerLOSiDC);
-        view.map.add(graphicLayerLOPDC)
+       // view.map.add(graphicLayerLOSiDC);
         view.map.add(province);
         view.map.add(graphicLayerOffice);
     })
@@ -93,7 +106,24 @@ export default class LayerList extends React.Component {
     });
   }
 
+  fromChild = (e) =>{
+    this.setState({
+      parcelLayer:e
+    })
+    }
+
+    componentDidUpdate(prevProps, prevState){
+      if(prevState.parcelLayer !== this.state.parcelLayer){
+   
+        this.props.view.map.removeAll()
+        this.layers()
+      }
+
+    }
   render() {
-    return <div className="layerlist" ref={this.layerLists}></div>;
+    return <>
+      <div className="layerlist" ref={this.layerLists}></div>
+      <Parcels view={this.props.view} parcelLayer={this.fromChild} />
+    </>
   }
 }

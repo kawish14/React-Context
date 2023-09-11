@@ -124,23 +124,21 @@ export default class POP extends React.Component {
           FileSaver.saveAs(data, ` ${_this.state.popName} - CPE` + fileExtension); */
   
           let total_fsp = new Set();
-          let maxSlot = -Infinity;
+          let maxSlot = new Set();
   
           // Iterate over the array and add fsp values to the Set
           for (let i = 0; i < _this.state.relatedCPE.length; i++) {
             total_fsp.add(_this.state.relatedCPE[i].nce_fsp);
-            if (_this.state.relatedCPE[i].slot > maxSlot) {
-              maxSlot = _this.state.relatedCPE[i].slot;
-            }
+            maxSlot.add(_this.state.relatedCPE[i].slot)
           }
-  
+      
           // Get the total count of unique fsp values
           let totalCount = total_fsp.size;
-  
+          console.log("total CPE:", _this.state.relatedCPE.length, "Cards:",maxSlot.size)
           _this.setState({
-            cards: maxSlot,
+            cards: maxSlot.size,
             used_ports: totalCount,
-            free_ports: maxSlot * 16 - totalCount,
+            free_ports: maxSlot.size * 16 - totalCount,
             display:"inline-table"
           });
   

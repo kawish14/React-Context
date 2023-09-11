@@ -26,4 +26,6 @@ span.esri-icon-visible, span.esri-layer-list__child-toggle, span.esri-icon-non-v
   padding: 0;
   transition: background-color 125ms ease-in-out;
 }
-
+ul.esri-layer-list__list.esri-layer-list__list--root.esri-layer-list__list--independent{
+  font-size: small;
+}

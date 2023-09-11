@@ -35,3 +35,38 @@
         font-size: 0.8em;
       }
   }
+  .esri-widget--button{
+    color: rgb(31, 145, 243);
+  }
+  .mainParcelDiv{
+    padding: 8px;
+    color: rgb(31, 145, 243);
+    background-color: #2c2b2b;
+    font-weight:bold;
+    border-radius: 5px;
+  }
+  .BlockDiv, .SubBlockDiv {
+    display: flex;
+    flex: 1 1;
+    padding: 0;
+    flex-direction: column;
+  }
+  .parcelSelection{
+    padding: 2px;
+    border-radius: 3px;
+    font-weight: 700;
+    color: #1f91f3;
+    background-color: #25282b;
+  }
+
+  .labelParcel{
+    font-weight: 700;
+    font-size: medium
+  }
+  .BlockDiv button, .SubBlockDiv button{
+      color: rgb(31, 145, 243);
+      background-color: #2c2b2b;
+  }
+  .Loading{
+    color: red;
+  }

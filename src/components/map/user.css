@@ -57,7 +57,7 @@
       width: 100%;
     }
     .map{
-        height: 88vh;
+        height: 71vh;
     }
     .column {
         width: 0%;
@@ -74,6 +74,14 @@
   /*** FOR TABLE TEXT ***/
   @media (max-width: 767px) {
     /* Styles for mobile devices */
+    #layoutSidenav {
+      height: auto;
+      position: relative;
+      width: 100%;
+    }
+    .map{
+      height: 79vh;
+    }
     .heading {
       font-size: 10px;
    

@@ -64,7 +64,6 @@ span.tab-element-note{
     }
   }
 
-
   @media (max-width: 1310px) {
     /** Mobile Screen **/
     .column {
@@ -76,9 +75,6 @@ span.tab-element-note{
         margin-right: -15px;
         margin-left: -15px;
         background-color: #242424;
-    }
-    .Losi-Card{
-      display: block;
     }
   }
 
@@ -93,6 +89,20 @@ span.tab-element-note{
     .body-text {
       font-size: 11px;
   
+    }
+
+    .tab-elements {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    span.tab-element-note{
+      margin-right: 2px;
+      font-size: 0.6em;
+      color: rgb(247, 247, 129);
+    }
+    .tab-element-note-strong{
+      letter-spacing: 1.5px;
     }
 
   }
@@ -124,7 +134,8 @@ span.tab-element-note{
   
  .modal-header{
   color: rgb(31, 145, 243);
-  background-color:#2a2a2a
+  background-color:#2a2a2a;
+  
  }
  .modal-body{
   color: rgb(31, 145, 243);
@@ -133,6 +144,21 @@ background-color: #2a2a2a
 .ticket-icon{
   margin-left:10px;
   cursor: pointer;
+}
+.pop-select{
+  padding: 3px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: rgb(31, 145, 243);
+  background-color: #111111;
+  margin-left: 8em;
+  font-weight: 600;
+  border:1px solid rgb(31, 145, 243);
+
+}
+.pop-names{
+  font-weight: 600;
 }
   
   

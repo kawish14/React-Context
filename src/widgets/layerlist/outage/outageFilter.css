@@ -1,0 +1,11 @@
+.outageFilter{
+    background-color: #242424;
+    color: #1f91f3;
+    padding: 10px;
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    font-size: small;
+    font-weight: bold;
+
+}

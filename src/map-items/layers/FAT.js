@@ -60,7 +60,7 @@ export default function FAT(props) {
 
     FAT.renderer = rendererCheck;
     FAT.labelingInfo = labelClassFAT;
-    navigator.geolocation.getCurrentPosition(
+  /*   navigator.geolocation.getCurrentPosition(
         (position) => {
             setLatitude(position.coords.latitude)
             setLongitude(position.coords.longitude)
@@ -68,7 +68,7 @@ export default function FAT(props) {
         (error) => {
           console.log(error);
         }
-      );
+      ); */
   },[]);
 
   return null;

@@ -202,8 +202,8 @@ export default class HeaderComponent extends React.Component {
   };
 
   getFile = (e) => {
-    if (e.target.title === "Upload CSV") {
-      this.props.file("Upload CSV");
+    if (e.target.title === "Upload GeoJSON") {
+      this.props.file("Upload GeoJSON");
     } else if (e.target.title === "Upload KML") {
       this.props.file("Upload KML");
     }
@@ -256,8 +256,30 @@ export default class HeaderComponent extends React.Component {
           className={`collapse navbar-collapse`}
           id="navbarSupportedContent"
         ></div>
+       {/*  <Nav navbar>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle style={{color: 'rgb(38, 144, 243)'}} nav caret>
+                  <span title="Upload File" className="UploadFile" >
+                    <FontAwesomeIcon icon={faFile} />  Upload File
+                  </span>
+                </DropdownToggle>
 
-        <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <DropdownMenu
+                  onClick={(e) => this.getFile(e)}
+                  center
+                > 
+                 <NavItem  >
+                  <span title="Upload GeoJSON" className="UploadCSV" >
+                    <FontAwesomeIcon icon={faFileCsv} /> Upload Geojson
+                  </span>
+                </NavItem>
+
+                
+                </DropdownMenu>
+              </UncontrolledDropdown> 
+            </Nav> */}
+
+        <form className="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
           <Nav className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle style={{ color: "rgb(38, 144, 243)" }} nav caret>
@@ -358,9 +380,9 @@ export default class HeaderComponent extends React.Component {
           </Nav>
         </form>
 
-        <form className="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" id="notification">
+  {/*        <form className="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" id="notification">
             <Notification view={this.props.view} />   
-        </form>   
+        </form>  */}   
 
         <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
           <NavLink

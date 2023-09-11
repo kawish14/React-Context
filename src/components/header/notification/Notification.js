@@ -17,10 +17,13 @@ export default function Notification (props) {
   const [downDC, setDownDC] = useState([]);
   const [LOPDC, setLOPDC] = useState([]);
 
-  const [LOSiDcArray, setLOSiDcArray] = useState([])
+  const [LOSiDcArray, setLOSiDcArray] = useState([]);
+  const [LOSiLength, setLOSiLength] = useState(0)
+
+  const empty = (arr) => (arr.length = 0);
 
   const handleDcDown = useCallback((data) => {
-    console.log(data);
+   // console.log(data);
     let query = DC_ODB.createQuery();
   
     // Create an array of promises to fetch features for each data element
@@ -48,35 +51,6 @@ export default function Notification (props) {
       });
     });
   }, [downDC]);
-
-  const handleDcUP = useCallback((data) => {
-    console.log(data);
-    let query = DC_ODB.createQuery();
-  
-    // Create an array of promises to fetch features for each data element
-    const fetchFeaturePromises = data.map((element) => DC_ODB.queryFeatures(query).then((result) => {
-      const features = result.features;
-      return features.find((e) => e.attributes.id === element.dc_id);
-    }));
-  
-    // Wait for all promises to resolve
-    Promise.all(fetchFeaturePromises).then((newFeatures) => {
-      // Filter the new features to exclude null values (features not found)
-      const filteredNewFeatures = newFeatures.filter(Boolean);
-  
-      // Filter the current downDC state to only keep items that are present in the data array
-      setLOPDC((prevDcDown) => prevDcDown.filter((item) => data.some((element) => element.dc_id === item.attributes.id)));
-  
-      // Add new features to the downDC state (if they are not already present)
-      filteredNewFeatures.forEach((newFeature) => {
-        if (!LOPDC.some((item) => item.attributes.id === newFeature.attributes.id)) {
-          setLOPDC((prevDcDown) => [...prevDcDown, newFeature]);
-          addLOPGraphic(newFeature)
-        }
-        addLOPGraphic(newFeature)
-      });
-    });
-  }, [LOPDC]);
 
   const addDownGraphic = (e) =>{
     graphicLayerLOSiDC.graphics.removeAll();
@@ -113,36 +87,10 @@ export default function Notification (props) {
     })
   }
 
-  const addLOPGraphic = (e) =>{
-    graphicLayerLOPDC.graphics.removeAll();
-    loadModules(["esri/Graphic","esri/layers/GraphicsLayer","esri/geometry/Point",],
-    { css: false }).then(async ([Graphic, GraphicsLayer, Point]) => {
-      let point = {
-        type: "point",
-        longitude: e.geometry.longitude,
-        latitude: e.geometry.latitude,
-      };
-
-      let markerSymbol = {
-        type: "picture-marker",
-        url: "images/down-arrow-yellow.gif",
-        width: "35px",
-        height: "40px",
-        xoffset: 0,
-        yoffset: 12,
-      };
-
-      let pointGraphic = new Graphic({
-        geometry: point,
-        symbol: markerSymbol,
-      });
-
-      graphicLayerLOPDC.graphics.add(pointGraphic);
-    })
-  }
   useEffect(() => {
+    console.log(LOSiDcArray)
     handleDcDown(LOSiDcArray)
-  }, [LOSiDcArray]);
+  }, [LOSiLength]);
 
   useEffect(() =>{
     const placeholders = region.map((region, index) => `'${region}'`).join(',');
@@ -175,13 +123,13 @@ export default function Notification (props) {
   const socketFun = () =>{
     const dcIds = [...new Set(allCPE[0].map((customer) => customer.properties.dc_id))];
     socket.on("endpoint", async (data) => {
-      if (data.alarmstate == 2 || data.alarmstate == 4) {
+      if (data.alarmstate == 2 ) {
         let LOS = customer.createQuery();
         customer.queryFeatures(LOS).then(async function(response){
-            const updatedDcArray = [];
+          const updatedDcArray = []
             dcIds.forEach((dcId) => {
               const downPercentage = calculateDownPercentage(response.features, dcId);
-              if (downPercentage > 70) {
+              if (downPercentage > 40) {
                 let dcDownStatus = {
                   'dc_id': parseInt(dcId),
                   'downPercentage': parseFloat(downPercentage.toFixed(2)),
@@ -191,10 +139,14 @@ export default function Notification (props) {
               }
             });
             setLOSiDcArray(updatedDcArray);
+            setLOSiLength(updatedDcArray.length)
+
+            console.log("LOSiLength:",updatedDcArray.length)
         })
       }
     })
   }
+
   const calculateDownPercentage = (customers, dcId) => {
 
     const totalCustomers = allCPE[0].filter((customer) => customer.properties.dc_id === dcId).length;
@@ -203,7 +155,6 @@ export default function Notification (props) {
     return (downCustomers / totalCustomers) * 100;
   }
   
-
   const location = (e) =>{
     const {DC_ODB} = context.view
     const dataId = e.currentTarget.getAttribute("data-id");

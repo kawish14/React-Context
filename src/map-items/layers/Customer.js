@@ -211,37 +211,37 @@ export default class Customer extends React.Component {
 
     let valueExpression = `When( 
 
-                ${name} == 0 && ${cat} == 'VIP', 'zero',
+                ${name} == 0 && ${cat} == 'VIP', 'VIP Online',
     
-                ${name} == 1 && ${cat} == 'VIP', 'one',
+                ${name} == 1 && ${cat} == 'VIP', 'VIP Power Off',
     
-                ${name} == 2 && ${cat} == 'VIP' && ${week} >= '${complete_date}', 'two',
+                ${name} == 2 && ${cat} == 'VIP' && ${week} >= '${complete_date}', 'VIP LOSi < 1 week',
     
-                ${name} == 2 && ${cat} == 'VIP' && ${week} <= '${complete_date}', 'two_1',
+                ${name} == 2 && ${cat} == 'VIP' && ${week} <= '${complete_date}', 'VIP LOSi > 1 week',
     
-                ${name} == 3 && ${cat} == 'VIP', 'three',
+                ${name} == 3 && ${cat} == 'VIP', 'VIP GEM Packet Loss',
         
-                ${name} == 4 && ${cat} == 'VIP', 'four',
+                ${name} == 4 && ${cat} == 'VIP', 'VIP LOP',
                 
-                ${name} == 2 && ${cat} != 'VIP' && ${week} <= '${complete_date}' && ${ticketStatus} != 'In-process', 'two_1_not_vip',
-                ${name} == 2 && ${cat} != 'VIP' && ${week} <= '${complete_date}' && ${ticketStatus} == 'In-process', 'c-two_1',
+                ${name} == 2 && ${cat} != 'VIP' && ${week} <= '${complete_date}' && ${ticketStatus} != 'In-process', 'Ordinary LOSi > 1 week',
+                ${name} == 2 && ${cat} != 'VIP' && ${week} <= '${complete_date}' && ${ticketStatus} == 'In-process', 'LOSi Ticket > 1 week',
                 
-                ${name} == 2 && ${cat} != 'VIP' && ${week} >= '${complete_date}' && ${ticketStatus} != 'In-process', 2,
-                ${name} == 2 && ${cat} != 'VIP' && ${week} >= '${complete_date}' && ${ticketStatus} == 'In-process', 'c-two',
+                ${name} == 2 && ${cat} != 'VIP' && ${week} >= '${complete_date}' && ${ticketStatus} != 'In-process', 'Ordinary LOSi < 1 week',
+                ${name} == 2 && ${cat} != 'VIP' && ${week} >= '${complete_date}' && ${ticketStatus} == 'In-process', 'LOSi Ticket < 1 week',
                
                 
-                ${name} == 0 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 0,
-                ${name} == 0 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'c-0',
+                ${name} == 0 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 'Ordinary Online',
+                ${name} == 0 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'Online Ticket',
     
-                ${name} == 1 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 1,
-                ${name} == 1 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'c-1',
+                ${name} == 1 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 'Ordinary Power Off',
+                ${name} == 1 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'Power Off Ticket',
     
-                ${name} == 3 && ${cat} != 'VIP'  && ${ticketStatus} != 'In-process', 3,
-                ${name} == 3 && ${cat} != 'VIP'  && ${ticketStatus} == 'In-process', 'c-3',
+                ${name} == 3 && ${cat} != 'VIP'  && ${ticketStatus} != 'In-process', 'Ordinary GEM Packet Loss',
+                ${name} == 3 && ${cat} != 'VIP'  && ${ticketStatus} == 'In-process', 'GEM Packet Loss Ticket',
     
-                ${name} == 4 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 4,
-                ${name} == 4 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'c-4',
-                5
+                ${name} == 4 && ${cat} != 'VIP' && ${ticketStatus} != 'In-process', 'Ordinary LOP',
+                ${name} == 4 && ${cat} != 'VIP' && ${ticketStatus} == 'In-process', 'LOP Ticket',
+                'Other'
                 )`;
 
     var rendererCheck = {
@@ -250,18 +250,7 @@ export default class Customer extends React.Component {
       valueExpression: valueExpression,
       uniqueValueInfos: [
         {
-          value: "5Min",
-          symbol: {
-            type: "picture-marker",
-            url: "images/down-arrow-red.gif",
-            width: "35px",
-            height: "40px",
-            xoffset: 0,
-            yoffset: 12,
-          },
-        },
-        {
-          value: "zero",
+          value: "VIP Online",
           symbol: {
             type: "picture-marker",
             url: "images/zero.png",
@@ -271,7 +260,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "one",
+          value: "VIP Power Off",
           symbol: {
             type: "picture-marker",
             url: "images/one.png",
@@ -281,7 +270,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "two",
+          value: "VIP LOSi < 1 week",
           symbol: {
             type: "picture-marker",
             url: "images/two.png",
@@ -291,7 +280,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "two_1",
+          value: "VIP LOSi > 1 week",
           symbol: {
             type: "picture-marker",
             url: "images/two_1.png",
@@ -301,7 +290,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "two_1_not_vip",
+          value: "Ordinary LOSi > 1 week",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -314,7 +303,17 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-two_1",
+          value: "LOSi Ticket > 1 week",
+          symbol: {
+            type: "picture-marker",
+            url: "images/losiTicketWeek.png",
+            color: "red",
+            width: "22px",
+            height: "25px",
+          },
+        },
+        {
+          value: "LOSi Ticket < 1 week",
           symbol: {
             type: "picture-marker",
             url: "images/los.png",
@@ -324,17 +323,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-two",
-          symbol: {
-            type: "picture-marker",
-            url: "images/los.png",
-            color: "red",
-            width: "13px",
-            height: "23px",
-          },
-        },
-        {
-          value: "three",
+          value: "VIP GEM Packet Loss",
           symbol: {
             type: "picture-marker",
             url: "images/three.png",
@@ -344,7 +333,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "four",
+          value: "VIP LOP",
           symbol: {
             type: "picture-marker",
             url: "images/four.png",
@@ -354,7 +343,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "0",
+          value: "Ordinary Online",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -367,7 +356,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-0",
+          value: "Online Ticket",
           symbol: {
             type: "picture-marker",
             url: "images/online.png",
@@ -377,7 +366,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "1",
+          value: "Ordinary Power Off",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -390,7 +379,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-1",
+          value: "Power Off Ticket",
           symbol: {
             type: "picture-marker",
             url: "images/poweroff.png",
@@ -400,7 +389,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "2",
+          value: "Ordinary LOSi < 1 week",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -413,7 +402,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "3",
+          value: "Ordinary GEM Packet Loss",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -426,7 +415,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-3",
+          value: "GEM Packet Loss Ticket",
           symbol: {
             type: "picture-marker",
             url: "images/gem.png",
@@ -436,7 +425,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "4",
+          value: "Ordinary LOP",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -449,7 +438,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "c-4",
+          value: "LOP Ticket",
           symbol: {
             type: "picture-marker",
             url: "images/lop.png",
@@ -459,7 +448,7 @@ export default class Customer extends React.Component {
           },
         },
         {
-          value: "5",
+          value: "Other",
           symbol: {
             type: "simple-marker",
             style: "circle",
@@ -490,7 +479,6 @@ export default class Customer extends React.Component {
 
     customer.visible = true;
 
-    customer.legendEnabled = false;
     customer.renderer = rendererCheck;
     // customer.featureReduction = {
     //   type: "cluster",
