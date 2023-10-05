@@ -57,7 +57,7 @@ const listItems = (event) =>{
         [
           {
             title: "Filter Outages",
-            className: "esri-icon-filter",
+            className: "esri-icon-sliders-horizontal",
             id: "filter-outages",
           },
         ],

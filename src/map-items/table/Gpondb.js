@@ -164,7 +164,7 @@ const handleTab = (region) => {
 
 };
 
-const tableData = (region) => {
+const tableData = async (region) => {
 
   const  {customer,loginRole} = context.view;
 
@@ -178,50 +178,51 @@ const tableData = (region) => {
     let LOP = customer.createQuery();
     let Ticket = customer.createQuery();
 
+
     // Tickets
     Ticket.where = ` ticketstatus = 'In-process' AND region = '${region}' `;
-    customer.queryFeatures(Ticket).then(function (response) {
+    await customer.queryFeatures(Ticket).then(function (response) {
       setTicket(response.features.length);
      
     });
 
     // LOS Week
     LOSWeek.where = `alarmstate = 2 AND  lastdowntime >= '${complete_date}' AND region = '${region}'`;
-    customer.queryFeatures(LOSWeek).then(function (response) {
+    await customer.queryFeatures(LOSWeek).then(function (response) {
       setLOSWeek(response.features.length);
     
     });
 
     // LOS OLD
     LOSOld.where = `alarmstate = 2 AND  lastdowntime <= '${complete_date}' AND region = '${region}'`;
-    customer.queryFeatures(LOSOld).then(function (response) {
+    await customer.queryFeatures(LOSOld).then(function (response) {
       setLOSOld(response.features.length);
     });
 
     // Online
     Online.where = `alarmstate = 0 AND  region = '${region}' `;
-    customer.queryFeatures(Online).then(function (response) {
+    await customer.queryFeatures(Online).then(function (response) {
       setOnline(response.features.length);
     
     });
 
     // Gying Gasp
     DyingGasp.where = `alarmstate = 1 AND  region = '${region}' `;
-    customer.queryFeatures(DyingGasp).then(function (response) {
+    await customer.queryFeatures(DyingGasp).then(function (response) {
       setDyingGasp(response.features.length);
      
     });
 
     // GEMPack
     GEMPack.where = `alarmstate = 3 AND  region = '${region}' `;
-    customer.queryFeatures(GEMPack).then(function (response) {
+    await customer.queryFeatures(GEMPack).then(function (response) {
       setGEMPack(response.features.length);
    
     });
 
     // LOP
     LOP.where = `alarmstate = 4 AND  region = '${region}' `;
-    customer.queryFeatures(LOP).then(function (response) {
+    await customer.queryFeatures(LOP).then(function (response) {
       setLOP(response.features.length);
      
     });

@@ -82,7 +82,7 @@ export default class POP extends React.Component {
                 if (e.graphic.layer) {
                 
                   if (e.graphic.layer.title === "POP") {
-                    POP.popupTemplate.actions = [relatedTable];
+                   // POP.popupTemplate.actions = [relatedTable];
   
                     _this.setState({
                       popID: e.graphic.attributes.id,

@@ -5,45 +5,9 @@ import "./user.css";
 import HeaderComponent from "../header/HeaderComponent";
 import Sidebar from "../sidebar/Sidebar";
 import {WaveLoadings} from '../loading/LoadingComponent'
-import LayerList from "../../widgets/layerlist/LayerList";
-import Customer from "../../map-items/layers/Customer";
-import Gpondb from "../../map-items/table/Gpondb";
-import SelectGraphic from "../../widgets/selectionTool/SelectGraphic";
-import SearchWidget from "../../widgets/search/SearchWidget";
-import {
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavbarToggler,
-  Collapse,
-  NavItem,
-  Jumbotron,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
+import { componentsRole,componentsPermission, otherComponents } from "./RoleBaseComponent";
+
 import {version} from '../../url'
-import Tracking from "../../map-items/real-time/vehicle-tracking/Tracking";
-import InactiveCPE from "../../map-items/layers/InactiveCPE";
-import DC from "../../map-items/layers/DC";
-import FAT from "../../map-items/layers/FAT";
-import Joint from "../../map-items/layers/Joint";
-import Feeder from "../../map-items/layers/Feeder";
-import Distribution from "../../map-items/layers/Distribution";
-import Backhaul from "../../map-items/layers/Backhaul"
-import POP from "../../map-items/layers/POP";
-import Zone from "../../map-items/layers/Zone";
-import HomeWidget from "../../widgets/mini-widgets/HomeWidget";
-import CoordinateWidget from "../../widgets/mini-widgets/CoordinateWidget";
-import Editor from "../../widgets/editor/Editor";
-import Legend from "../../widgets/legend/Legend";
-import Outage from "../../map-items/layers/Outage";
-import GISEditor from "../../widgets/editor/GISEditor";
 
 setDefaultOptions({ version: version });
 
@@ -245,29 +209,32 @@ useEffect(() =>{
                 <div ref={mapRef} className="map">
                   {view && (
                     <>
-                      <Customer view={view} gponTable={setGponTable} />
-                      <InactiveCPE view={view} />
-                      <DC view={view} />
-                      <FAT view={view} />
-                      <Joint view={view} />
-                      <POP view={view} />
-                      <Feeder view={view} />
-                      <Distribution view={view} />
-                      <Backhaul view={view} />
-                      <Zone view={view} />
-                      <Outage view={view} />
+                      {componentsRole.map(({ component: Component, roles, key }) => {
+                        // Check if the user's role is in the array of roles for this component
+                        if (roles.includes(loginRole.role)) {
+                          return (
+                            <Component
+                              key={key}
+                              view={view}
+                              gponTable={setGponTable}
+                              searchUpdateFun={searchUpdateFun}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
 
-                      <SearchWidget view={view} />
-                      {loginRole.permission === "Edit" ? <Editor view={view} /> : null}
-                      {loginRole.permission === "GIS" ? <GISEditor view={view} /> : null}
+                      {componentsPermission.map(
+                        ({ component: Component, permission, key }) => {
+                          // Check if the user has the required role to render the component
+                          if (loginRole.permission === permission) {
+                            return <Component key={key} view={view} />;
+                          }
+                          return null; // Render nothing if the user doesn't have the required role
+                        }
+                      )}
 
-                      <Tracking view={view} searchUpdateFun={searchUpdateFun} />
-                      <HomeWidget view={view} />
-                      <CoordinateWidget view={view} />
-                      <Legend view={view} />
-       
-                     {/* {file === "Upload GeoJSON" && <UploadGeoJSON view={view} fileName={(e)=>updateFile(e)} />} */}
-                       
+                      {/* {file === "Upload GeoJSON" && <UploadGeoJSON view={view} fileName={(e)=>updateFile(e)} />} */}
                     </>
                   )}
                 </div>
@@ -276,19 +243,28 @@ useEffect(() =>{
 
             {view && (
               <>
-                <Gpondb
-                  view={view}
-                  summary={summary}
-                  ticket={ticket}
-                  ref={gponRef}
-                />
-
-                <SelectGraphic
-                  view={view}
-                  summaryTableFun={summaryTableFun}
-                  layerViews={[CPELayerView, InactiveCPELayerView, DCLayerView]} // DCLayerView
-                  setMapDiv={setMapDiv}
-                />
+                {otherComponents.map(({ component: Component, roles, key }) => {
+                  // Check if the user's role is in the array of roles for this component
+                  if (roles.includes(loginRole.role)) {
+                    return (
+                      <Component
+                        key={key}
+                        view={view}
+                        summary={summary}
+                        ticket={ticket}
+                        ref={gponRef}
+                        summaryTableFun={summaryTableFun}
+                        layerViews={[
+                          CPELayerView,
+                          InactiveCPELayerView,
+                          DCLayerView,
+                        ]} // DCLayerView
+                        setMapDiv={setMapDiv}
+                      />
+                    );
+                  }
+                  return null;
+                })}
               </>
             )}
           </div>

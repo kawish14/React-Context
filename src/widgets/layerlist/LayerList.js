@@ -65,7 +65,7 @@ export default class LayerList extends React.Component {
          // layers:[Zone,fiber,POP,Joint, DC_ODB,FAT,customerList,graphicLayer]
         });
 
-        if(loginRole.role === 'Admin'){
+        if(loginRole.role === 'Admin' || loginRole.role === 'CSD'){
           layers.layers = [Zone,fiber,POP,Joint, DC_ODB,FAT,customerList]
         }
         else{
@@ -73,7 +73,7 @@ export default class LayerList extends React.Component {
         }
         view.map.add(this.state.parcelLayer)
         view.map.add(layers)
-        view.map.add(Outage)
+       // view.map.add(Outage)
         view.map.add(graphicLayer)
         view.map.add(recentDown);
        // view.map.add(graphicLayerLOSiDC);
@@ -123,7 +123,7 @@ export default class LayerList extends React.Component {
   render() {
     return <>
       <div className="layerlist" ref={this.layerLists}></div>
-      <Parcels view={this.props.view} parcelLayer={this.fromChild} />
+{/*       <Parcels view={this.props.view} parcelLayer={this.fromChild} /> */}
     </>
   }
 }

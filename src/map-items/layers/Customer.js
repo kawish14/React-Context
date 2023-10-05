@@ -462,7 +462,7 @@ export default class Customer extends React.Component {
         },
       ],
     };
- 
+
 
     customer.definitionExpression = queryExpression;
     const placeholders = region.map((region, index) => `'${region}'`).join(',');

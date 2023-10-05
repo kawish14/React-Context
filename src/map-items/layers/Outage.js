@@ -67,6 +67,8 @@ export default function Outage(props) {
 
     Outage.renderer = rendererCheck;
 
+    
+
   }, []);
 
   return null;

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import MapContext from "../../context/mapContext";
 import { loadModules, setDefaultOptions } from "esri-loader";
+import {parcelOID,parcel} from '../../url'
 import axios from "axios";
 
 export default function GISEditor(props){
@@ -16,7 +17,7 @@ export default function GISEditor(props){
 
           let geom = `'Point(${lon} ${lat})'`
 
-          axios.post("http://localhost:2000/parcelOID",{geom:geom})
+          axios.post(parcelOID,{geom:geom})
           .then(res =>{
 
             fetchFromExternal(cord,res.data[0].objectid)
@@ -47,7 +48,7 @@ export default function GISEditor(props){
     }
 
     const submit = (obj) =>{
-      axios.post("http://localhost:2000/parcel",obj)
+      axios.post(parcel,obj)
       .then(res =>{
         return
       })

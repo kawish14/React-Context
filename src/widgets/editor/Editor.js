@@ -28,7 +28,8 @@ export default function Editor(props) {
   const [FSP, SetFSP] = useState([])
   const [selectedFSP, setSelectedFSP] = useState([]);
   const [selectedCableTypes, setSelectedCableTypes] = useState([]);
-  const cableTypes = [
+  const [cableTypes, SetCableTypes] = useState([])
+ /*  const cableTypes = [
     "288F Duct OFC",
     "144F Duct OFC",
     "96F Duct OFC",
@@ -39,8 +40,8 @@ export default function Editor(props) {
     "24F CLT OFC",
     "12F CLT OFC", 
     "04F CLT OFC",
-    "02F CLT OFC",
-  ];
+    "02F CLT OFC", 
+  ]; */
   const selectedCableTypesText = selectedCableTypes.join(', ');
   const selectedFSPText = selectedFSP.join(', ');
 
@@ -48,8 +49,8 @@ export default function Editor(props) {
     cableType: "",
     olt:"",
     fsp:"",
-    outageTime: "",
-    reolveTime: "",
+    outageTime: null,
+    reolveTime: null,
     landmark:"",
     affetedCPE:"",
     category:"",
@@ -61,6 +62,8 @@ export default function Editor(props) {
     comment:""
 
   });
+
+const empty = (arr) => (arr.length = 0);
 
  useEffect(() =>{
 
@@ -166,6 +169,8 @@ const addPoint = (event) =>{
     sketchViewModel.create(geometryType);
 
     sketchViewModel.on("create", (event) => {
+
+     
       if (event.state === "complete") {
         sketchGeometry = event.graphic.geometry;
 
@@ -199,6 +204,7 @@ const addPoint = (event) =>{
     });
 
     sketchViewModel.on("update", (event) => {
+
       if (
         event.toolEventInfo &&
         (event.toolEventInfo.type.includes("scale-stop") ||
@@ -228,8 +234,19 @@ const findFiber = (bufferGeometry) =>{
   query.geometry = bufferGeometry
 
   Feeder.queryFeatures(query).then(function(result) {
+    empty(cableTypes)
+    SetCableTypes(cableTypes)
+
     result.features.forEach(function(feature) {
-      console.log(feature.attributes)
+      const exists = cableTypes.some(item => item.cable_id === feature.attributes.cable_id);
+      if (!exists) {
+        cableTypes.push({cable_id:feature.attributes.cable_id, capacity:feature.attributes.capacity, type:feature.attributes.type})
+        SetCableTypes(cableTypes);
+      }
+      console.log({cable_id:feature.attributes.cable_id, capacity:feature.attributes.capacity, type:feature.attributes.type})
+     // cableTypes.push(`${feature.attributes.capacity}  ${feature.attributes.type}`)
+   
+
     })
 
   })
@@ -246,7 +263,7 @@ const OLTSelect = (event) =>{
   formData.olt = event.target.value
   setFormData(formData);
 
-  axios.get(`${olt}?olt='${event.target.value}'`)
+  axios.post(`${olt}`,{olt:`${event.target.value}`})
   .then(res =>{
 
     let fsp = res.data;
@@ -349,13 +366,14 @@ const handleSubmit = (event) => {
 
       alert(response.data.message)
       if(response.data.message === "Data inserted successfully"){
+        Outage.refresh()
         sketchLayer.removeAll()
         setFormData({
           cableType: "",
           olt:"",
           fsp:"",
-          outageTime: "",
-          reolveTime: "",
+          outageTime: null,
+          reolveTime: null,
           landmark:"",
           affetedCPE:"",
           category:"",
@@ -372,8 +390,8 @@ const handleSubmit = (event) => {
         setSubCategories([]);
         setSelectedCableTypes([])
         setSelectedFSP([])
-
-        Outage.refresh()
+        empty(cableTypes)
+        SetCableTypes(cableTypes)
       }
      
     })
@@ -411,8 +429,8 @@ const handleSubmit = (event) => {
           </option>
           {cableTypes.map((cable, index) => {
             return (
-              <option key={index} value={cable}>
-                {cable}
+              <option key={index} value={cable.capacity + " " + cable.type + " - " + cable.cable_id}>
+                {cable.capacity + " " + cable.type + " - " + cable.cable_id}
               </option>
             );
           })}

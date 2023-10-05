@@ -18,6 +18,9 @@ export default function OutageFilter(props) {
     
       <label>Outage Date</label>
       <input type="date" />
+      <br />
+
+      <button>Click</button>
     </div>
   );
 }
