@@ -7,7 +7,6 @@ import { faFile, faFileCsv, faRightFromBracket, faGlobe } from '@fortawesome/fre
 import mapContext from "../../context/mapContext";
 import {Nav,NavItem,DropdownToggle,DropdownMenu,UncontrolledDropdown} from "reactstrap";
 import "./header.css";
-import Notification from "./notification/Notification";
 import {version} from '../../url'
 
 setDefaultOptions({ version: version })

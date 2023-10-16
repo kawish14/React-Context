@@ -5,7 +5,6 @@ import { listItems } from "./listItems";
 import {triggerAction} from './triggerAction'
 import { version } from "../../url";
 import './layerlist.css';
-import Parcels from "../../map-items/layers/Parcels";
 
 setDefaultOptions({ version: version });
 
@@ -123,7 +122,6 @@ export default class LayerList extends React.Component {
   render() {
     return <>
       <div className="layerlist" ref={this.layerLists}></div>
-{/*       <Parcels view={this.props.view} parcelLayer={this.fromChild} /> */}
     </>
   }
 }

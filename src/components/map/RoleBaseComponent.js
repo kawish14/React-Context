@@ -14,7 +14,6 @@ import CoordinateWidget from "../../widgets/mini-widgets/CoordinateWidget";
 import Editor from "../../widgets/editor/Editor";
 import Legend from "../../widgets/legend/Legend";
 import Outage from "../../map-items/layers/Outage";
-import GISEditor from "../../widgets/editor/GISEditor";
 import SearchWidget from "../../widgets/search/SearchWidget";
 import Gpondb from "../../map-items/table/Gpondb";
 import SelectGraphic from "../../widgets/selectionTool/SelectGraphic";
@@ -114,12 +113,7 @@ const componentsPermission = [
     component: Editor,
     key: 'Editor',
     permission: "Edit",
-  },
-  {
-    component: GISEditor,
-    key: 'GISEditor',
-    permission: "GIS",
-  },
+  }
 ];
 
 const otherComponents = [

@@ -234,7 +234,7 @@ useEffect(() =>{
                         }
                       )}
 
-                      {/* {file === "Upload GeoJSON" && <UploadGeoJSON view={view} fileName={(e)=>updateFile(e)} />} */}
+                     
                     </>
                   )}
                 </div>
