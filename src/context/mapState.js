@@ -87,28 +87,36 @@ const MapState = (props) => {
     return (view.loginRole = x);
   });
 
-  function layers(CQL_FILTER) {
+  function layers(CQL_FILTER, startIndex = 0, count = 100000) {
 
     const placeholders = view.region.map((region, index) => `'${region}'`).join(',');
-    console.log(placeholders)
+    
     loadModules(
-      ["esri/layers/GeoJSONLayer","esri/layers/WMSLayer", "esri/layers/GraphicsLayer", "esri/Graphic"],
+      ["esri/layers/GeoJSONLayer","esri/layers/WMSLayer", "esri/layers/GraphicsLayer", "esri/Graphic",
+        "esri/config"
+      ],
       {
         css: false,
       }
-    ).then(([GeoJSONLayer,WMSLayer, GraphicsLayer, Graphic]) => {
+    ).then(([GeoJSONLayer,WMSLayer, GraphicsLayer, Graphic, esriConfig]) => {
+
+      esriConfig.request.timeout = 300000;
+
       /*************************** NETWORK SERVICES ******************************/
 
       const customer = new GeoJSONLayer({
         url: api + "/geoserver/web_app/ows",
         customParameters: {
-          CQL_FILTER: `region in (${placeholders}) and alarmstate in (2)`,
-          maxFeatures: "1000000",
+          CQL_FILTER: `region in (${placeholders}) and alarmstate in(2,4)`,
+          //maxFeatures: "1000000",
           outputFormat: "application/json",
           request: "GetFeature",
           service: "WFS",
-          typeName: "web_app:Customers",
-          version: "1.0.0",
+          typeName: "web_app:Customers_test",
+          version: "2.0.0",
+          count: count,           // how many per request
+          startIndex: startIndex,
+          sortBy: "id ASC" 
         },
         labelsVisible: false,
         title: "Active Customer",
@@ -387,7 +395,19 @@ const MapState = (props) => {
         url:
           api +
           `/geoserver/web_app/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=web_app%3ACustomers&maxFeatures=1000000&CQL_FILTER=${CQL_FILTER}&outputFormat=application%2Fjson`,
-        title: "Inactive Customer",
+        customParameters: {
+          CQL_FILTER: CQL_FILTER,
+          //maxFeatures: "1000000",
+          outputFormat: "application/json",
+          request: "GetFeature",
+          service: "WFS",
+          typeName: "web_app:Customers_test",
+          version: "2.0.0",
+          count: count,           // how many per request
+          startIndex: startIndex,
+          sortBy: "id ASC" 
+        },
+          title: "Inactive Customer",
         minScale: 1155581,
         legendEnabled: false,
         visible: false,
@@ -1087,9 +1107,9 @@ const MapState = (props) => {
         customLayerParameters: '',
       });
 
-      allCPE.queryFeatures().then(function(response){
+      /* allCPE.queryFeatures().then(function(response){
         view.allCPE = response.features
-      });
+      }); */
 
       view.customer = customer;
       view.InactiveCPE = InactiveCPE;
@@ -1103,6 +1123,7 @@ const MapState = (props) => {
       view.Zone = Zone;
       view.Outage = Outage
       view.WMSlayer = WMSlayer
+      
 
       /*************************** OTHER SERVICES ******************************/
 

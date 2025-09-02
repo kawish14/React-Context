@@ -89,7 +89,8 @@ export default class Realtime extends React.Component {
           "add",
         );
         graphic.then((region) => {
-          _this.props.region(region);
+       
+         // _this.props.region(region);
         });
 
         await recentDown(this.context.view);
@@ -111,7 +112,7 @@ export default class Realtime extends React.Component {
                 "delete",
               );
               graphic.then((region) => {
-                _this.props.region(region);
+                //_this.props.region(region);
               });
 
               await recentDown(_this.context.view);

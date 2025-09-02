@@ -86,8 +86,10 @@ export default class SelectionTool extends React.Component {
         expanded: false,
         expandTooltip: "Selection Tool",
       });
-      
-      _this.context.view.customer.when(function(){
+
+      view.ui.add(layerListExpand, "top-right");
+
+      /* _this.context.view.customer.when(function(){
 
         if (window.innerWidth >= 576) {
           view.ui.add(layerListExpand, "top-right");
@@ -106,7 +108,7 @@ export default class SelectionTool extends React.Component {
         else{
           view.ui.remove(layerListExpand, "top-right");
         }
-      });
+      }); */
 
     });
   }

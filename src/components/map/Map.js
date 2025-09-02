@@ -26,6 +26,9 @@ export default function Map() {
   const [summary, summaryTable] = useState(false);
   const summaryTableFun = (e) => {  summaryTable(e)} 
 
+  const [region, setRegion] = useState('North');
+  const regionFun = (e) => { setRegion(e) }
+
   const [search, updateSearch] = useState(null)
   const searchUpdateFun = (e) => {updateSearch(e)}
 
@@ -40,8 +43,25 @@ export default function Map() {
   const [InactiveCPELayerView, UpdateInactiveCPELayerView] = useState(null)
   const [DCLayerView, UpdateDCLayerView] = useState(null)
 
+  const [onFilterChange, setOnFilterChange] = useState({"South":[2,4], "North":[2,3,4], "Central":[2,4]});
+
+  const [dataLoading, setDataLoading] = useState(true)
+  const dataloadingFun = (e) => { setDataLoading(e) } 
 
   useEffect(() => {
+    if(loginRole.role === 'Admin' || loginRole.role === 'North'){
+      regionFun('North')
+    }
+    else if(loginRole.role === 'South'){
+      regionFun('South')
+    }
+    else if(loginRole.role === 'Central'){
+      regionFun('Central')
+    }
+    else {
+      regionFun('North')
+    }
+
     loadModules(
       [
         "esri/Map",
@@ -195,6 +215,9 @@ useEffect(() =>{
             search={search}
             gponTable={setGponTable}
             file={updateFile}
+            region = {region}
+            onFilterChange={setOnFilterChange}
+            dataloading={dataloadingFun}
           />
         )}
       </nav>
@@ -254,6 +277,10 @@ useEffect(() =>{
                         ticket={ticket}
                         ref={gponRef}
                         summaryTableFun={summaryTableFun}
+                        region = {regionFun}
+                        dataloading = {dataLoading}
+                        dataloadingFun = {dataloadingFun}
+                        currentFilters={onFilterChange}
                         layerViews={[
                           CPELayerView,
                           InactiveCPELayerView,

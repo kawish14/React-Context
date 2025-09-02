@@ -1,4 +1,4 @@
-import React, { useContext, useEffect,useMemo, useRef, useState,forwardRef  } from "react";
+import React, { useContext, useEffect,useMemo, useRef, useState,forwardRef, useCallback  } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -41,11 +41,13 @@ const Gpondb = forwardRef((props,ref) => {
   const context = useContext(MapContext);
   const  {customer,loginRole} = context.view;
 
+  // Gpondb.js
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, UpdateIsModalOpen] = useState(false);
 
   const [ticketInfo, updateTicketInfo] = useState(null)
 
-  const [activeTab, setActiveTab] = useState("South");
+  const [activeTab, setActiveTab] = useState("");
   const [areaMapping, SetAreaMapping] = useState({})
   const [region, setRegion] = useState(null)
   const [visibility, setVisibility] = useState('visible')
@@ -57,7 +59,7 @@ const Gpondb = forwardRef((props,ref) => {
   const [DyingGasp, setDyingGasp] = useState(null)
   const [GEMPack, setGEMPack] = useState(null)
   const [LOP, setLOP] = useState(null);
-
+  
  // const [sqlWhere, setSqlWhere] = useState(`region = '${activeTab}' AND ticketstatus = 'In-process'`);
   const [OLT,setOLT] = useState([])
 
@@ -67,6 +69,23 @@ const Gpondb = forwardRef((props,ref) => {
 
   useEffect(() => {
     let view = props.view
+
+    if(loginRole.role === "Admin" || loginRole.role === "North"){
+      setActiveTab('North')
+      tableData('North')
+    }
+    else if(loginRole.role === "South"){
+      setActiveTab('South')
+      tableData('South')
+    }
+    else if(loginRole.role === "Central"){
+      setActiveTab('Central')
+      tableData('Central')
+    }
+    else {
+      setActiveTab('North')
+      tableData('North')
+    }
     
     if (window.innerWidth >= 767) {
       setVisibility('visible')
@@ -97,16 +116,19 @@ const Gpondb = forwardRef((props,ref) => {
         else {
           setActiveTab(region);
           tableData(`'${region}'`);
+          //props.dataloadingFun(false)
         }
       });
-
+     
     });
 
   }, []);
 
   useEffect(() =>{
+    //setIsLoading(true)
     tableData(activeTab);
-  },[activeTab]);
+  
+  },[activeTab, props.currentFilters]);
 
   let toggleModal = () => {
 
@@ -117,6 +139,7 @@ const Gpondb = forwardRef((props,ref) => {
 const handleTab = (region) => {
   setActiveTab(region);
   tableData(region);
+  props.region(region);
 
   if(region === "South") {
     props.view
@@ -164,124 +187,211 @@ const handleTab = (region) => {
 
 };
 
-const tableData = async (region) => {
-
-  const  {customer,loginRole} = context.view;
-
-  if(region === activeTab) {
-
-    let LOSWeek = customer.createQuery();
-    let LOSOld = customer.createQuery();
-    let Online = customer.createQuery();
-    let DyingGasp = customer.createQuery();
-    let GEMPack = customer.createQuery();
-    let LOP = customer.createQuery();
-    let Ticket = customer.createQuery();
-
-
-    // Tickets
-    Ticket.where = ` ticketstatus = 'In-process' AND region = '${region}' `;
-    await customer.queryFeatures(Ticket).then(function (response) {
-      setTicket(response.features.length);
-     
-    });
-
-    // LOS Week
-    LOSWeek.where = `alarmstate = 2 AND  lastdowntime >= '${complete_date}' AND region = '${region}'`;
-    await customer.queryFeatures(LOSWeek).then(function (response) {
-      setLOSWeek(response.features.length);
+const tableData = async (selectedRegion) => {
+  if (selectedRegion !== activeTab) return;
+  
+  try {
+    // Get the current filter state for this region
+    const currentAlarmStates = props.currentFilters && props.currentFilters[selectedRegion] 
+      ? props.currentFilters[selectedRegion] 
+      : [0, 1, 2, 3, 4];
     
-    });
-
-    // LOS OLD
-    LOSOld.where = `alarmstate = 2 AND  lastdowntime <= '${complete_date}' AND region = '${region}'`;
-    await customer.queryFeatures(LOSOld).then(function (response) {
-      setLOSOld(response.features.length);
-    });
-
-    // Online
-    Online.where = `alarmstate = 0 AND  region = '${region}' `;
-    await customer.queryFeatures(Online).then(function (response) {
-      setOnline(response.features.length);
+    // Reset all counts
+   /* setLOSWeek(0);
+    setLOSOld(0);
+    setOnline(0);
+    setDyingGasp(0);
+    setGEMPack(0);
+    setLOP(0); */
     
-    });
+    // Single optimized query instead of multiple queries
+    if (currentAlarmStates.length > 0) {
+      const alarmStateFilter = currentAlarmStates.join(',');
+      let query = customer.createQuery();
+      query.where = `alarmstate IN (${alarmStateFilter}) AND region = '${selectedRegion}'`;
+      query.returnGeometry = false; // Don't need geometry for counting
+      query.outFields = ["alarmstate", "lastdowntime"];
+      
+      const response = await customer.queryFeatures(query);
+      
+      // Process results in memory (much faster than separate queries)
+      const counts = {
+        LOSWeek: 0,
+        LOSOld: 0,
+        Online: 0,
+        DyingGasp: 0,
+        GEMPack: 0,
+        LOP: 0
+      };
+      
+      response.features.forEach(feature => {
+        const { alarmstate, lastdowntime } = feature.attributes;
+        
+        switch(alarmstate) {
+          case 0: 
+            if (currentAlarmStates.includes(0)) counts.Online++; 
+            break;
+          case 1: 
+            if (currentAlarmStates.includes(1)) counts.DyingGasp++; 
+            break;
+          case 2:
+            if (currentAlarmStates.includes(2)) {
+              if (lastdowntime && lastdowntime >= complete_date) {
+                counts.LOSWeek++;
+              } else {
+                counts.LOSOld++;
+              }
+            }
+            break;
+          case 3: 
+            if (currentAlarmStates.includes(3)) counts.GEMPack++; 
+            break;
+          case 4: 
+            if (currentAlarmStates.includes(4)) counts.LOP++; 
+            break;
+        }
+      });
+      
+      // Update state once with all counts
+      setLOSWeek(counts.LOSWeek);
+      setLOSOld(counts.LOSOld);
+      setOnline(counts.Online);
+      setDyingGasp(counts.DyingGasp);
+      setGEMPack(counts.GEMPack);
+      setLOP(counts.LOP);
+    }
 
-    // Gying Gasp
-    DyingGasp.where = `alarmstate = 1 AND  region = '${region}' `;
-    await customer.queryFeatures(DyingGasp).then(function (response) {
-      setDyingGasp(response.features.length);
-     
-    });
-
-    // GEMPack
-    GEMPack.where = `alarmstate = 3 AND  region = '${region}' `;
-    await customer.queryFeatures(GEMPack).then(function (response) {
-      setGEMPack(response.features.length);
-   
-    });
-
-    // LOP
-    LOP.where = `alarmstate = 4 AND  region = '${region}' `;
-    await customer.queryFeatures(LOP).then(function (response) {
-      setLOP(response.features.length);
-     
-    });
+    // Separate ticket query (this one is still needed separately)
+    let ticketQuery = customer.createQuery();
+    ticketQuery.where = `ticketstatus = 'In-process' AND region = '${selectedRegion}'`;
+    ticketQuery.returnGeometry = false;
+    ticketQuery.outFields = ["ticketstatus"];
+    
+    const ticketResponse = await customer.queryFeatures(ticketQuery);
+    setTicket(ticketResponse.features.length);
+    
+  } catch (error) {
+    console.error("Error in tableData:", error);
+    // Set error state or show user-friendly message
+    setLOSWeek(0);
+    setLOSOld(0);
+    setOnline(0);
+    setDyingGasp(0);
+    setGEMPack(0);
+    setLOP(0);
+    setTicket(0);
   }
-
+  finally {
+   setIsLoading(false)
+   //props.dataloadingFun(false);
+  }
+  
 };
 
 const generateTable = (region) => {
-    if (activeTab === region) {
+  if (activeTab === region) {
+
+    
+    // Check if all values are 0 or null
+    const hasAnyAlarms = LOSWeek > 0 || Online > 0 || DyingGasp > 0 || GEMPack > 0 || LOP > 0;
+    const hasTickets = ticket > 0;
+    const hasAnyData = hasAnyAlarms || hasTickets;
+
+    // If no data at all
+    if (!hasAnyData && !isLoading) {
       return (
-        <table className="table table-bordered">
-          <colgroup>
-            {LOSWeek !== 0 && <col className="column" />}
-            {Online !== 0 && <col className="column" />}
-            {DyingGasp !== 0 && <col className="column" />}
-            {GEMPack !== 0 && <col className="column" />}
-            {LOP !== 0 && <col className="column" />}
-            {ticket !== 0 && <col className="column" />}
-          </colgroup>
-
-          <thead>
-            <tr>
-              {LOSWeek !== 0 && <th className="heading">LOS</th>}
-              {Online !== 0 && <th className="heading">Online</th>}
-              {DyingGasp !== 0 && <th className="heading">Powered Off</th>}
-              {GEMPack !== 0 && <th className="heading">GEM Packet Loss</th>}
-              {LOP !== 0 && <th className="heading">Low Optical Power</th>}
-              {ticket !== 0 && (
-                <th className="heading">
-                  Tickets
-                  <span className="ticket-icon" onClick={ticketModal} style={{visibility:visibility}}>
-                    <i className="fa fa-info-circle fa-lg"></i>
-                  </span>
-                </th>
-              )}
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              {LOSWeek !== 0 && (
-                <td className="body-text">
-                  <i class="fas fa-circle" style={styels.LOSRed}></i> {LOSWeek}{" "}
-                  &nbsp;&nbsp; | &nbsp;&nbsp;{" "}
-                  <i class="fas fa-circle" style={styels.LOSOrange}></i>{" "}
-                  {LOSOld}
-                </td>
-              )}
-              {Online !== 0 && <td className="body-text"> {Online}</td>}
-              {DyingGasp !== 0 && <td className="body-text">{DyingGasp}</td>}
-              {GEMPack !== 0 && <td className="body-text">{GEMPack}</td>}
-              {LOP !== 0 && <td className="body-text">{LOP}</td>}
-              {ticket !== 0 && <td className="body-text">{ticket}</td>}
-            </tr>
-          </tbody>
-        </table>
+        <div className="no-data-container" style={noDataStyles.container}>
+          <div style={noDataStyles.message}>
+            <i className="fas fa-info-circle" style={noDataStyles.infoIcon}></i>
+            <h5 style={noDataStyles.title}>No Data Available</h5>
+            <p style={noDataStyles.text}>
+              There are currently no alarms or tickets in the <strong>{activeTab}</strong> region.
+            </p>
+          </div>
+        </div>
       );
     }
 
+    // If we're in ticket mode but no tickets
+    if (props.ticket === "All Ticket" && !hasTickets) {
+      return (
+        <div className="no-data-container" style={noDataStyles.container}>
+          <div style={noDataStyles.message}>
+            <i className="fas fa-info-circle" style={noDataStyles.infoIcon}></i>
+            <h5 style={noDataStyles.title}>No Tickets Found</h5>
+            <p style={noDataStyles.text}>
+              There are no tickets in the <strong>{activeTab}</strong> region at this time.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // If we're in alarm mode but no alarms
+    if (props.ticket !== "All Ticket" && !hasAnyAlarms) {
+      return (
+       <div className="no-data-container" style={noDataStyles.container}>
+        <div style={noDataStyles.message}>
+          <i className="fas fa-exclamation-triangle" style={noDataStyles.warningIcon}></i>
+          <h5 style={noDataStyles.title}>No Alarms Found</h5>
+          <p style={noDataStyles.text}>
+            There are no alarms matching the selected criteria in the <strong>{activeTab}</strong> region.
+          </p>
+        </div>
+      </div>
+      );
+    }
+
+    // Regular table when data exists
+    return (
+      <table className="table table-bordered">
+        <colgroup>
+          {LOSWeek > 0 && <col className="column" />}
+          {Online > 0 && <col className="column" />}
+          {DyingGasp > 0 && <col className="column" />}
+          {GEMPack > 0 && <col className="column" />}
+          {LOP > 0 && <col className="column" />}
+          {ticket > 0 && <col className="column" />}
+        </colgroup>
+
+        <thead>
+          <tr>
+            {LOSWeek > 0 && <th className="heading">LOS</th>}
+            {Online > 0 && <th className="heading">Online</th>}
+            {DyingGasp > 0 && <th className="heading">Powered Off</th>}
+            {GEMPack > 0 && <th className="heading">GEM Packet Loss</th>}
+            {LOP > 0 && <th className="heading">Low Optical Power</th>}
+            {ticket > 0 && (
+              <th className="heading">
+                Tickets
+                <span className="ticket-icon" onClick={ticketModal} style={{visibility:visibility}}>
+                  <i className="fa fa-info-circle fa-lg"></i>
+                </span>
+              </th>
+            )}
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            {LOSWeek > 0 && (
+              <td className="body-text">
+                <i className="fas fa-circle" style={styels.LOSRed}></i> {LOSWeek}{" "}
+                &nbsp;&nbsp; | &nbsp;&nbsp;{" "}
+                <i className="fas fa-circle" style={styels.LOSOrange}></i>{" "}
+                {LOSOld}
+              </td>
+            )}
+            {Online > 0 && <td className="body-text"> {Online}</td>}
+            {DyingGasp > 0 && <td className="body-text">{DyingGasp}</td>}
+            {GEMPack > 0 && <td className="body-text">{GEMPack}</td>}
+            {LOP > 0 && <td className="body-text">{LOP}</td>}
+            {ticket > 0 && <td className="body-text">{ticket}</td>}
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
 };
 
 const ticketModal = () => {
@@ -431,16 +541,17 @@ const chart = (sqlWhere, field) =>{
     
   });
 }
+// region={tableData}
   return (
     <div className="row">
-      <Realtime view={props.view} region={tableData} />
+      <Realtime view={props.view}  />
       {props.summary ? null : (
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <div className="tabs" >
             <div className="tab-elements">
               <ul className="nav status gpon">
                 {region === null ? (
-                  <span>Loading....</span>
+                  <span></span>
                 ) : (
                   region.map((region, index) => {
                     return (
@@ -465,10 +576,17 @@ const chart = (sqlWhere, field) =>{
             </div>
           </div>
 
-          <div className="outlet" >
-            {generateTable("South")}
-            {generateTable("North")}
-            {generateTable("Central")}
+          <div className="outlet">
+            {isLoading  ? (
+              <div className="no-data-container" style={noDataStyles.container}>
+                <div style={noDataStyles.message}>
+                  <i className="fas fa-info-circle" style={noDataStyles.spinner}></i>
+                  <h5 style={noDataStyles.title}>Loading Data...</h5>
+                </div>
+              </div>
+            ) : (
+              generateTable(activeTab)
+            )}
           </div>
 
           <Modal isOpen={isModalOpen} toggle={toggleModal}>
@@ -515,6 +633,48 @@ const styels = {
   LOSOrange: {
     fontSize: "8px",
     color: "orange",
+  },
+};
+
+const noDataStyles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "98%",
+    backgroundColor: "rgb(36 36 36)", // dark background
+    color: "#f5f5f5", // light text
+  },
+  message: {
+    textAlign: "center",
+  },
+  spinner: {
+    fontSize: "1.5rem",
+    color: "#4CAF50", // green accent spinner
+    marginBottom: "8px",
+  },
+  infoIcon: {
+    fontSize: "1.5rem",
+    color: "#2196F3", // blue for info
+    marginBottom: "8px",
+  },
+  warningIcon: {
+    fontSize: "1.5rem",
+    color: "#FFC107", // amber for warning
+    marginBottom: "8px",
+  },
+  title: {
+    fontSize: "1.2rem",
+    fontWeight: "500",
+  },
+  text: {
+    marginBottom: "0.5rem",
+    lineHeight: "1.5",
+  },
+  hint: {
+    color: "#868e96",
+    fontStyle: "italic",
   },
 };
 

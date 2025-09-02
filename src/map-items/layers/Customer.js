@@ -183,11 +183,25 @@ export default class Customer extends React.Component {
   }
 
   componentDidMount() {
-    var queryExpression = "alarmstate = 2";
+    const {loginRole,region} = this.context.view;
+    let queryExpression
+    if (loginRole.role === "Admin") {
+      queryExpression = "( (region = 'North' AND alarmstate IN (2,3,4)) OR (region IN ('South','Central') AND alarmstate IN (2,4)) )";
+    }
+    else if (loginRole.role === "North") {
+      queryExpression = "region = 'North' AND alarmstate IN (2,3,4)";
+
+    }
+    else{
+      queryExpression = "alarmstate IN (2,4)";
+    }
+
+    
     this.symbology(queryExpression)
     this.setState({
       filterCriteria:queryExpression
     })
+
   }
 
 /*   componentDidUpdate(prevProps,prevState){

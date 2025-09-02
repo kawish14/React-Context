@@ -17,88 +17,6 @@ export default function SearchWidget(props) {
       css: false,
     }).then(([FeatureLayer,Expand, Search,Graphic]) => {
 
-      axios
-      .get(
-        "http://jazztrack.com.pk/ApisForJazzTrack/TrackerLastRecord?apiKey=03TWQ-91S7-SBD5&loginName=TRANSWORLD"
-      )
-      .then((response) => {
-        let data = response.data.searchIDs;
-        let graphic = data.map((e) => {
-          let vehicleAttributes = {
-            Ignition_On_Off: e.Ignition_On_Off,
-            Speed: e.Speed,
-            vehicle_model: e.vehicle_model,
-            Location: e.Location,
-            Tracker_Time: e.Tracker_Time,
-            vehicle_make: e.vehicle_make,
-            engine_no: e.engine_no,
-            reg_no: e.reg_no,
-            Longitude: e.Longitude,
-            Latitude: e.Latitude,
-          };
-
-          let point = {
-            type: "point",
-            longitude: vehicleAttributes.Longitude,
-            latitude: vehicleAttributes.Latitude,
-          };
-
-          return new Graphic({
-            geometry: point,
-            attributes: vehicleAttributes,
-          });
-        });
-
-        let vehicleLayers = new FeatureLayer({
-          title: "Vehicle Layer",
-          objectIdField: "OBJECTID",
-          source: graphic,
-          fields: [
-            {
-              name: "OBJECTID",
-              type: "oid",
-              alias: "OBJECTID",
-            },
-            {
-              name: "reg_no",
-              type: "string",
-              alias: "Registration Number",
-            },
-            {
-              name: "Ignition_On_Off",
-              type: "string",
-              alias: "Ignition",
-            },
-            {
-              name: "Speed",
-              type: "double",
-              alias: "Speed",
-            },
-            {
-              name: "vehicle_model",
-              type: "string",
-              alias: "Model",
-            },
-            {
-              name: "Location",
-              type: "string",
-              alias: "Location",
-            },
-            {
-              name: "Latitude",
-              type: "string",
-              alias: "Latitude",
-            },
-            {
-              name: "Longitude",
-              type: "string",
-              alias: "Longitude",
-            },
-          ],
-        });
-       
-        vehicleLayer = vehicleLayers;
-
         let source = [
        /*    {
             layer: vehicleLayer,
@@ -223,11 +141,7 @@ export default function SearchWidget(props) {
 
         //  searchEvent(searchWidget.content)
       
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+     
 
     });
   }, []);

@@ -54,46 +54,91 @@ export default class HeaderComponent extends React.Component {
     authenticationService.logout();
   };
 
-  getSelected = (e) => {
-    let _this = this;
-    const { loginRole, customer, region } = this.context.view;
+ getSelected = (e) => {
+    this.regionAlarms = this.regionAlarms || {}; 
 
-    const placeholders = region.map((region, index) => `'${region}'`).join(",");
+    const { customer, region } = this.context.view;
+    const selectedRegion = this.props.region; // e.g. "North"
 
     let values = [];
-    const checkboxes = document.querySelectorAll(
-      "input[name='status']:checked"
-    );
+    const checkboxes = document.querySelectorAll("input[name='status']:checked");
+    checkboxes.forEach((checkbox) => values.push(parseInt(checkbox.value)));
 
-    checkboxes.forEach((checkbox) => {
-      values.push(parseInt(checkbox.value));
 
-       var CQL_FILTER = `region in (${placeholders}) and alarmstate in (${values})`;
-      customer.customParameters.CQL_FILTER = CQL_FILTER;
-      
-      var queryExpression = `alarmstate in (${values})`;
-      customer.definitionExpression = queryExpression;
-
-      customer.refresh();
-
-      this.setState({
-        loading: "Loading.....",
+    if (values.includes(0)) {
+      // reset all regions to default (2)
+      region.forEach(r => {
+          this.regionAlarms[r] = [2,4]; 
       });
 
-      loadModules(["esri/core/watchUtils"], {
-        css: false,
-      }).then(([watchUtils]) => {
-        this.props.view.when(() => {
-          watchUtils.whenFalse(this.props.view, "updating", () => {
-            this.setState({ loading: null });
-          });
+      // then apply 0 only for the selected region
+      this.regionAlarms[selectedRegion] = [0];
+
+    } else {
+      // normal case: apply same alarms to all regions
+      region.forEach(r => {
+        this.regionAlarms[r] = [...values];
+      });
+    }
+
+    // Build CQL filter with parentheses
+    let regionFilters = [];
+    for (const r of region) {
+      const alarms = this.regionAlarms[r];
+      if (alarms && alarms.length > 0) {
+        regionFilters.push(
+          `(region='${r}' AND alarmstate IN (${alarms.join(",")}))`
+        );
+      }
+    }
+
+    let ticketMode = "No Ticket"; // Default value
+    if(e.target && e.target.name === "ticket"){
+      if(e.target.checked){
+        document.querySelectorAll("input[name='status']").forEach(cb => cb.checked = false);
+        const placeholders = region.map((region, index) => `'${region}'`).join(",");
+        
+        const CQL_FILTER = `region in (${placeholders}) and ticketstatus = 'In-process' `;
+        customer.customParameters.CQL_FILTER = CQL_FILTER;
+        customer.definitionExpression = CQL_FILTER;
+        
+        ticketMode ="All Ticket";
+        this.regionAlarms = {};
+      }
+    }
+    else{
+      const ticketCb = document.querySelector("input[name='ticket']");
+      if (ticketCb) ticketCb.checked = false;
+
+        const CQL_FILTER = regionFilters.join(" OR ");
+        console.log("CQL_FILTER:", CQL_FILTER);
+
+        customer.customParameters.CQL_FILTER = CQL_FILTER;
+        customer.definitionExpression = CQL_FILTER;
+
+        ticketMode ="No Ticket";
+    }
+    
+    customer.refresh();
+
+    this.setState({ loading: "Loading....." });
+    //this.props.dataloading(true);
+
+    loadModules(["esri/core/watchUtils"], { css: false }).then(([watchUtils]) => {
+      this.props.view.when(() => {
+        watchUtils.whenFalse(this.props.view, "updating", () => {
+          this.setState({ loading: null });
+          // Pass current filter state to the table component
+          this.props.ticket(ticketMode); 
+          this.props.onFilterChange && this.props.onFilterChange(this.regionAlarms);
+          this.props.gponTable(true);
+          //this.props.dataloading(false);
         });
       });
-
-      _this.props.ticket("No Ticket");
-
-      _this.props.gponTable(true);
     });
+
+    
+
 
     return values;
   };
@@ -286,13 +331,13 @@ export default class HeaderComponent extends React.Component {
               </DropdownToggle>
 
               <DropdownMenu onClick={this.getSelected} center>
-                <NavItem>
+               {/*  <NavItem>
                   <div className="label-container">
                     <label>
                       <input onClick={this.selectAll} type="checkbox" /> All
                     </label>
                   </div>
-                </NavItem>
+                </NavItem> */}
                 <NavItem>
                   <div className="label-container">
                     <label>
@@ -361,15 +406,19 @@ export default class HeaderComponent extends React.Component {
 
                 {this.context.view.loginRole.role === "TWA" ? null : (
                   <NavItem>
-                    <button
-                      className="btn my-2 my-sm-0 ticket"
-                      type="button"
-                      onClick={this.tickets}
-                    >
-                      Ticket
-                    </button>{" "}
-                    <br />
-                  </NavItem>
+                  <div className="label-container">
+                    <label>
+                      <input
+                        type="checkbox"
+                        id="ticket"
+                        value="In-process"
+                        name="ticket"
+                        disabled={this.state.loading !== null}
+                      />{" "}
+                      Tickets
+                    </label>
+                  </div>
+                </NavItem>
                 )}
                 <NavItem>
                   <h7 style={{ color: "red" }}>{this.state.loading}</h7>
